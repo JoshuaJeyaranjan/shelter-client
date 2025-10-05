@@ -1,0 +1,61 @@
+/* _global.scss */
+
+/* Reset margins, paddings, box-sizing */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Body defaults */
+body {
+  font-family: 'Helvetica', 'Arial', sans-serif;
+  line-height: 1.6;
+  background-color: #fff;
+  color: #333;
+}
+
+/* Headings */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+  line-height: 1.2;
+  margin-bottom: 0.5rem;
+}
+
+/* Paragraphs */
+p {
+  margin-bottom: 1rem;
+}
+
+/* Links */
+a {
+  text-decoration: none;
+  color: inherit;
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+/* Images */
+img {
+  max-width: 100%;
+  display: block;
+}
+
+/* Lists */
+ul, ol {
+  list-style: none;
+}
+
+/* Forms */
+input, button, select, textarea {
+  font-family: inherit;
+  font-size: inherit;
+}
+
+/* Buttons */
+button {
+  cursor: pointer;
+}
