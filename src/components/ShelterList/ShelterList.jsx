@@ -121,7 +121,7 @@ const fetchShelters = async () => {
       </div>
 
       <div style={{ margin: "1rem 0" }}>
-        <button onClick={() => setShowFullCapacity(!showFullCapacity)}>
+        <button className="full-capacity-button" onClick={() => setShowFullCapacity(!showFullCapacity)}>
           {showFullCapacity ? "Hide Full Capacity Shelters" : "Show Full Capacity Shelters"}
         </button>
       </div>
