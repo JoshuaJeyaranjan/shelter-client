@@ -44,7 +44,7 @@ const getDistanceKm = (lat1, lon1, lat2, lon2) => {
 
 const SheltersMap = ({ shelters }) => {
   const [filters, setFilters] = useState({ sector: "", city: "" });
-  const [showFullCapacity, setShowFullCapacity] = useState(true);
+  const [showFullCapacity, setShowFullCapacity] = useState(false);
   const [userLocation, setUserLocation] = useState(null);
 
   // Get unique options for filters
