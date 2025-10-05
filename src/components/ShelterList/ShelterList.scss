@@ -106,3 +106,18 @@
     }
   }
 }
+
+    .full-capacity-button {
+      padding: 0.6rem 1.2rem;
+      border-radius: 6px;
+      border: none;
+      background-color: #d10000;
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+
+      &:hover {
+        background-color: #4d0000;
+      }
+    }
