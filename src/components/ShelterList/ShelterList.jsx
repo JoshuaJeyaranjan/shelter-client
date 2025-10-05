@@ -268,18 +268,20 @@ const ShelterList = () => {
 
                   {fullCapacity && <span className='full-badge'>FULL</span>}
 
-                  {(shelter.latitude && shelter.longitude) && (
-  <div className="map-container" style={{ marginTop: "0.5rem" }}>
-    <iframe
-      width="100%"
-      height="200"
-      style={{ border: 0 }}
-      loading="lazy"
-      allowFullScreen
-      src={`https://maps.google.com/maps?q=${shelter.latitude},${shelter.longitude}&z=15&output=embed`}
-    ></iframe>
-  </div>
-)}
+                  {shelter.address && shelter.city && (
+    <div className="map-container" style={{ marginTop: "0.5rem" }}>
+      <iframe
+        width="100%"
+        height="200"
+        style={{ border: 0 }}
+        loading="lazy"
+        allowFullScreen
+        src={`https://maps.google.com/maps?q=${encodeURIComponent(
+          `${shelter.address}, ${shelter.city}, ${shelter.province || ""}`
+        )}&z=15&output=embed`}
+      ></iframe>
+    </div>
+  )}
                 </li>
                 
               )
