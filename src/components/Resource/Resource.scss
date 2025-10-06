@@ -1,0 +1,44 @@
+.resource-content {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+
+  .category {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #fff;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    display: inline-block;
+    margin-bottom: 0.5rem;
+  }
+
+  h2 {
+    font-size: 1.3rem;
+    margin: 0.5rem 0;
+    color: #222;
+  }
+
+  p {
+    font-size: 1rem;
+    color: #555;
+    flex-grow: 1;
+  }
+
+  a.visit-btn {
+    margin-top: 1rem;
+    text-decoration: none;
+    background-color: #0074cc;
+    color: #fff;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    text-align: center;
+    font-weight: 600;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+      background-color: #005fa3;
+    }
+  }
+}
