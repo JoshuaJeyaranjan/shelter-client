@@ -2,6 +2,7 @@ import React, { useState, useMemo, useEffect } from "react";
 import { MapContainer, TileLayer, Marker, Popup, CircleMarker } from "react-leaflet";
 import L from "leaflet";
 import "./SheltersMap.scss";
+import {useMap} from 'react-leaflet'
 
 // Helper to create a map marker with an SVG
 const createMarkerIcon = (color) => {
@@ -47,6 +48,19 @@ const SheltersMap = ({ shelters }) => {
   const [showFullCapacity, setShowFullCapacity] = useState(false);
   const [userLocation, setUserLocation] = useState(null);
 
+
+
+const RecenterOnUser = ({ userLocation }) => {
+  const map = useMap();
+  useEffect(() => {
+    if (userLocation) {
+      map.flyTo([userLocation.latitude, userLocation.longitude], 13, {
+        duration: 1.5,
+      });
+    }
+  }, [userLocation]);
+  return null;
+};
   // Get unique options for filters
   const sectors = useMemo(
     () => Array.from(new Set(shelters.map(s => s.sector).filter(Boolean))).sort(),
@@ -109,8 +123,13 @@ const SheltersMap = ({ shelters }) => {
       .sort((a, b) => (a.distance || Infinity) - (b.distance || Infinity));
   }, [shelters, filters, showFullCapacity, userLocation]);
 
-  const defaultCenter = userLocation ? [userLocation.latitude, userLocation.longitude] : [43.65107, -79.347015];
-  const mapCenter = filteredShelters.length ? [filteredShelters[0].latitude, filteredShelters[0].longitude] : defaultCenter;
+ // Default map center — downtown Toronto (Yonge-Dundas area)
+const downtownToronto = [43.6532, -79.3832];
+
+const mapCenter = userLocation
+  ? [userLocation.latitude, userLocation.longitude]
+  : downtownToronto;
+
 
   return (
     <>
@@ -137,7 +156,7 @@ const SheltersMap = ({ shelters }) => {
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           attribution="&copy; OpenStreetMap contributors"
         />
-
+  <RecenterOnUser userLocation={userLocation} />
         {/* User location marker */}
         {userLocation && (
           <CircleMarker
