@@ -3,7 +3,7 @@ import { MapContainer, TileLayer, Marker, Popup, CircleMarker, useMap } from "re
 import L from "leaflet";
 import "./SheltersMap.scss";
 
-// Create a marker icon with SVG
+// Marker icon helper
 const createMarkerIcon = (color) => L.divIcon({
   className: "",
   html: `
@@ -17,30 +17,31 @@ const createMarkerIcon = (color) => L.divIcon({
 });
 
 // Google Maps link helper
-const getGoogleMapsLink = (shelter) => {
-  if (!shelter.address || !shelter.city) return "#";
-  return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-    `${shelter.address}, ${shelter.city}, ${shelter.province || ""}`
-  )}`;
-};
+const getGoogleMapsLink = (shelter) =>
+  shelter.address && shelter.city
+    ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+        `${shelter.address}, ${shelter.city}, ${shelter.province || ""}`
+      )}`
+    : "#";
 
 // Haversine distance
 const getDistanceKm = (lat1, lon1, lat2, lon2) => {
   const R = 6371;
   const dLat = ((lat2 - lat1) * Math.PI) / 180;
   const dLon = ((lon2 - lon1) * Math.PI) / 180;
-  const a = Math.sin(dLat / 2) ** 2 + Math.cos((lat1 * Math.PI)/180) * Math.cos((lat2 * Math.PI)/180) * Math.sin(dLon/2)**2;
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  return R * c;
+  const a =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos((lat1 * Math.PI) / 180) *
+      Math.cos((lat2 * Math.PI) / 180) *
+      Math.sin(dLon / 2) ** 2;
+  return 2 * R * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 };
 
 // Recenter component
 const RecenterOnUser = ({ userLocation }) => {
   const map = useMap();
   useEffect(() => {
-    if (userLocation) {
-      map.flyTo([userLocation.latitude, userLocation.longitude], 13, { duration: 1.5 });
-    }
+    if (userLocation) map.flyTo([userLocation.latitude, userLocation.longitude], 13, { duration: 1.5 });
   }, [userLocation]);
   return null;
 };
@@ -50,57 +51,72 @@ const SheltersMap = ({ shelters }) => {
   const [showFullCapacity, setShowFullCapacity] = useState(false);
   const [userLocation, setUserLocation] = useState(null);
 
-  // Ask for geolocation
+  // Geolocation
   useEffect(() => {
     if (!navigator.geolocation) return;
     navigator.geolocation.getCurrentPosition(
-      pos => setUserLocation({ latitude: pos.coords.latitude, longitude: pos.coords.longitude }),
-      err => console.warn("Geolocation unavailable:", err)
+      (pos) => setUserLocation({ latitude: pos.coords.latitude, longitude: pos.coords.longitude }),
+      (err) => console.warn("Geolocation unavailable:", err)
     );
   }, []);
 
-  // Unique sectors & cities for filters
-  const sectors = useMemo(() => Array.from(new Set(shelters.map(s => s.sector).filter(Boolean))).sort(), [shelters]);
+  // Flatten programs for filters
+  const allPrograms = useMemo(() => shelters.flatMap(s => s.programs), [shelters]);
+  const sectors = useMemo(() => Array.from(new Set(allPrograms.map(p => p.sector).filter(Boolean))).sort(), [allPrograms]);
   const cities = useMemo(() => Array.from(new Set(shelters.map(s => s.city).filter(Boolean))).sort(), [shelters]);
 
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
-    setFilters(prev => ({ ...prev, [name]: value }));
+    setFilters((prev) => ({ ...prev, [name]: value }));
   };
 
-  const getMarkerColor = (shelter) => {
-    const sector = (shelter.sector || "").toLowerCase();
-    const fullCapacity = (shelter.capacity_actual_bed && shelter.occupied_beds >= shelter.capacity_actual_bed) ||
-                         (shelter.capacity_actual_room && shelter.occupied_rooms >= shelter.capacity_actual_room);
-    if (fullCapacity) return "#ff4d4f"; // red
-    if (sector.includes("families")) return "#2ecc71";
-    if (sector.includes("men") && !sector.includes("women")) return "#3498db";
-    if (sector.includes("women")) return "#e91e63";
-    if (sector.includes("mixed adult")) return "#f39c12";
-    if (sector.includes("youth")) return "#9b59b6";
-    return "#95a5a6"; // default gray
-  };
+  // Marker color based on programs
+const getMarkerColor = (location) => {
+  const programs = location.programs || [];
 
-  // Filter and sort shelters
-  const filteredShelters = useMemo(() => shelters
-    .filter(s => s.latitude && s.longitude)
-    .filter(s => {
-      const fullCapacity = (s.capacity_actual_bed && s.occupied_beds >= s.capacity_actual_bed) ||
-                           (s.capacity_actual_room && s.occupied_rooms >= s.capacity_actual_room);
-      if (!showFullCapacity && fullCapacity) return false;
-      if (filters.sector && s.sector !== filters.sector) return false;
-      if (filters.city && s.city !== filters.city) return false;
-      return true;
+  // Check if all programs are full
+  const allFull = programs.every(p =>
+    (p.capacity_actual_bed && p.occupied_beds >= p.capacity_actual_bed) ||
+    (p.capacity_actual_room && p.occupied_rooms >= p.capacity_actual_room)
+  );
+  if (allFull) return "#ff4d4f"; // red
+
+  // Pick first non-null sector
+  const sector = programs.find(p => p.sector)?.sector?.toLowerCase() || "";
+
+  if (sector.includes("families")) return "#2ecc71";
+  if (sector.includes("men") && !sector.includes("women")) return "#3498db";
+  if (sector.includes("women")) return "#e91e63";
+  if (sector.includes("mixed adult")) return "#f39c12";
+  if (sector.includes("youth")) return "#9b59b6";
+  return "#95a5a6"; // default gray
+};
+
+  // Filter locations and programs
+const filteredShelters = useMemo(() => {
+  return shelters
+    .map(location => {
+      if (!location.latitude || !location.longitude) return null; // skip invalid coords
+
+      const filteredPrograms = location.programs.filter(p => {
+        const fullCapacity = (p.capacity_actual_bed && p.occupied_beds >= p.capacity_actual_bed) ||
+                             (p.capacity_actual_room && p.occupied_rooms >= p.capacity_actual_room);
+        if (!showFullCapacity && fullCapacity) return false;
+        if (filters.sector && p.sector !== filters.sector) return false;
+        return true;
+      });
+
+      if (!filteredPrograms.length) return null;
+      if (filters.city && location.city !== filters.city) return null;
+
+      let distance = null;
+      if (userLocation) distance = getDistanceKm(userLocation.latitude, userLocation.longitude, location.latitude, location.longitude);
+
+      return { ...location, programs: filteredPrograms, distance };
     })
-    .map(s => {
-      if (userLocation) {
-        const distance = getDistanceKm(userLocation.latitude, userLocation.longitude, s.latitude, s.longitude);
-        return { ...s, distance };
-      }
-      return s;
-    })
-    .sort((a, b) => (a.distance || Infinity) - (b.distance || Infinity))
-  , [shelters, filters, showFullCapacity, userLocation]);
+    .filter(Boolean)
+    .sort((a, b) => (a.distance || Infinity) - (b.distance || Infinity));
+}, [shelters, filters, showFullCapacity, userLocation]);
 
   const mapCenter = userLocation ? [userLocation.latitude, userLocation.longitude] : [43.6532, -79.3832];
 
@@ -120,6 +136,10 @@ const SheltersMap = ({ shelters }) => {
         </button>
       </div>
 
+      <div className="shelters-map-count">
+        Showing {filteredShelters.reduce((acc, loc) => acc + loc.programs.length, 0)} programs across {filteredShelters.length} locations
+      </div>
+
       <MapContainer center={mapCenter} zoom={12} style={{ height: "500px", width: "100%", borderRadius: "8px" }}>
         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" attribution="&copy; OpenStreetMap contributors" />
         <RecenterOnUser userLocation={userLocation} />
@@ -135,18 +155,21 @@ const SheltersMap = ({ shelters }) => {
         )}
 
         {filteredShelters.map(s => (
-          <Marker key={s.id} position={[s.latitude, s.longitude]} icon={createMarkerIcon(getMarkerColor(s))}>
-            <Popup>
-              <strong>{s.location_name}</strong><br />
-              {s.address && <a href={getGoogleMapsLink(s)} target="_blank" rel="noopener noreferrer">{s.address}, {s.city}, {s.province}</a>}<br />
-              {s.capacity_actual_bed && <span>Beds: {s.occupied_beds || 0} / {s.capacity_actual_bed}<br /></span>}
-              {s.capacity_actual_room && <span>Rooms: {s.occupied_rooms || 0} / {s.capacity_actual_room}<br /></span>}
-              {s.distance && <span>Distance: {s.distance.toFixed(1)} km<br /></span>}
-              {(s.capacity_actual_bed && s.occupied_beds >= s.capacity_actual_bed) ||
-               (s.capacity_actual_room && s.occupied_rooms >= s.capacity_actual_room) ? (
-                 <strong style={{ color: "red" }}>⚠ Full Capacity</strong>
-               ) : null}
-            </Popup>
+          <Marker key={s.location_name + s.address} position={[s.latitude, s.longitude]} icon={createMarkerIcon(getMarkerColor(s))}>
+<Popup>
+  <strong>{s.location_name}</strong><br/>
+  {s.address && <a href={getGoogleMapsLink(s)}>{s.address}, {s.city}</a>}<br/>
+  {s.distance !== null && (
+  <span>Distance: {s.distance.toFixed(1)} km<br/></span>
+)}
+  {s.programs.map(p => (
+    <div key={p.id}>
+      {p.program_name && <span>Program: {p.program_name}<br/></span>}
+      {p.capacity_actual_bed && <span>Beds: {p.occupied_beds || 0} / {p.capacity_actual_bed}<br/></span>}
+      {p.capacity_actual_room && <span>Rooms: {p.occupied_rooms || 0} / {p.capacity_actual_room}<br/></span>}
+    </div>
+  ))}
+</Popup>
           </Marker>
         ))}
       </MapContainer>
