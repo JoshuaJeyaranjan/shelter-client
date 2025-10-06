@@ -24,3 +24,33 @@
     }
   }
 }
+
+.freshness-tag {
+  font-size: 0.8rem;
+  opacity: 0.8;
+  &.fresh { color: #2ecc71; }
+  &.stale { color: #f1c40f; }
+  &.expired { color: #e74c3c; }
+}
+
+.program-item .fresh-badge {
+  background-color: #4caf50;
+  color: white;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  margin-left: 0.5rem;
+}
+
+.program-item .stale-badge {
+  background-color: #ff9800;
+  color: white;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  margin-left: 0.5rem;
+}
+
+.program-item .recent {
+  font-weight: bold;
+}
