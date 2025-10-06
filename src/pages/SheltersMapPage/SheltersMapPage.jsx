@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { getShelters } from "../../api/shelters"; // use your existing API function
 import "./SheltersMapPage.scss";
 import SheltersMap from "../../components/SheltersMap/SheltersMap";
+import Nav from "../../components/Nav/Nav";
 const SheltersMapPage = () => {
   const [shelters, setShelters] = useState([]);
   const [loading, setLoading] = useState(true);

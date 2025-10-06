@@ -8,7 +8,7 @@ const Nav = () => {
 
   const links = [
     { name: 'Home', path: '/' },
-    { name: 'Map', path: '/map' },
+    { name: 'Map', path: '/shelter-map' },
     { name: 'Resources', path: '/resources' },
   ];
 
