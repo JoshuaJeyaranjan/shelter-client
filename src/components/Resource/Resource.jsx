@@ -1,23 +1,24 @@
-// Resource.jsx
-import React from 'react';
-import './Resource.scss';
-
+import React from "react";
+import { categoryColors } from "../../data/categoryColors";
+import './Resource.scss'
 const Resource = ({ image, title, description, url, category }) => {
+  const color = categoryColors[category] || categoryColors.Default;
+
   return (
     <div className="resource-card">
-      {image && <img src={image} alt={title} className="resource-image" />}
+      <img src={image} alt={title} />
       <div className="resource-content">
-        {category && <span className="resource-category">{category}</span>}
-        <h3 className="resource-title">{title}</h3>
-        <p className="resource-description">{description}</p>
-        {url && (
-          <a href={url} target="_blank" rel="noopener noreferrer" className="resource-link">
-            Learn More
-          </a>
-        )}
+        <div className="category" style={{ backgroundColor: color }}>
+          {category}
+        </div>
+        <h2>{title}</h2>
+        <p>{description}</p>
+        <a href={url} target="_blank" rel="noopener noreferrer" className="visit-btn">
+          Visit Resource
+        </a>
       </div>
     </div>
   );
 };
 
-export default Resource;
+export default Resource;;
