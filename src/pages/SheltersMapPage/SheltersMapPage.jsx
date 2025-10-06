@@ -24,6 +24,8 @@ const SheltersMapPage = () => {
   }, []);
 
   return (
+    <>
+    <Nav/>
     <div className="shelters-map-page">
       <h1>Toronto Shelters Map</h1>
 
@@ -35,6 +37,7 @@ const SheltersMapPage = () => {
         <SheltersMap shelters={shelters} />
       )}
     </div>
+    </>
   );
 };
 
