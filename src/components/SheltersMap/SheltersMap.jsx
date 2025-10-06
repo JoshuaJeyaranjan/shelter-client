@@ -113,6 +113,8 @@ const SheltersMap = ({ shelters }) => {
   const mapCenter = filteredShelters.length ? [filteredShelters[0].latitude, filteredShelters[0].longitude] : defaultCenter;
 
   return (
+    <>
+    
     <div className="shelters-map-container">
       {/* Filters */}
       <div className="map-filters">
@@ -189,6 +191,7 @@ const SheltersMap = ({ shelters }) => {
         <span><svg width="15" height="15"><circle cx="7" cy="7" r="7" fill="#95a5a6" /></svg> Other / Unknown</span>
       </div>
     </div>
+    </>
   );
 };
 
