@@ -23,6 +23,21 @@ const ProgramListItem = ({ program }) => {
           <strong>Rooms:</strong> {program.occupied_rooms || 0} / {program.capacity_actual_room}
         </p>
       )}
+              <p className="program-rooms">
+          <strong>Type:</strong> {program.overnight_service_type}
+        </p>
+
+        <p className={`freshness-tag ${program.freshness}`}>
+  {program.freshness === "recent" && (
+      <span className="fresh-badge">🔥 Updated Today</span>
+    )}
+    {program.freshness === "fresh" && (
+      <span className="fresh-badge">✅ Fresh</span>
+    )}
+    {program.freshness === "stale" && (
+      <span className="stale-badge">⚠️ May be stale</span>
+    )}
+</p>
     </li>
   );
 };

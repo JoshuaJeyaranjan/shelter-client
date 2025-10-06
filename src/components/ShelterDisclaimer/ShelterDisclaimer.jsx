@@ -18,7 +18,7 @@ const ShelterDisclaimer = () => {
           <h2 className="disclaimer-title">Important Disclaimer</h2>
           <p className="disclaimer-text">
             The occupancy and capacity data shown on this site is <strong>not real-time</strong>. 
-            It reflects a historical snapshot at the end of each day and may not reflect current availability. 
+            It reflects a historical snapshot at the end of each week day and may not reflect current availability. 
             <strong>Shelter spaces are dynamic and can change throughout the day.</strong>
           </p>
           <p className="disclaimer-text">

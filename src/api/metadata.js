@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_BASE = "https://shelter-server-n9v6.onrender.com";
+const API_BASE = "https://shelter-server-n9v6.onrender.com/locations";
 
 // Fetch metadata
 export const getLocationsMetadata = async () => {
