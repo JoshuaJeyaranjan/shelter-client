@@ -50,20 +50,36 @@ const ShelterList = () => {
   }, [])
 
   // Fetch metadata
-  useEffect(() => {
-    const fetchMetadata = async () => {
-      const meta = await getSheltersMetadata()
-      if (meta.lastRefreshed) {
+useEffect(() => {
+  const fetchMetadata = async () => {
+    try {
+      const meta = await getSheltersMetadata();
+
+      if (meta?.lastRefreshed) {
+      
         const torontoTime = new Date(meta.lastRefreshed).toLocaleString('en-CA', {
-          timeZone: 'America/Toronto'
-        })
-        setMetadata({ lastRefreshed: torontoTime })
+          timeZone: 'America/Toronto',
+          weekday: 'short',
+          year: 'numeric',
+          month: 'short',
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: true,
+        });
+          console.log('given api time:', meta)
+        console.log('Toronto Time:', torontoTime)
+        setMetadata({ lastRefreshed: torontoTime });
       } else {
-        setMetadata({ lastRefreshed: null })
+        setMetadata({ lastRefreshed: null });
       }
+    } catch (err) {
+      console.error('Error fetching metadata:', err);
     }
-    fetchMetadata()
-  }, [])
+  };
+
+  fetchMetadata();
+}, []);
 
   const fetchShelters = async () => {
     setLoading(true)
