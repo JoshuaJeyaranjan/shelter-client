@@ -76,72 +76,85 @@ const ShelterList = () => {
   }, []);
 
   // Fetch shelter locations
-  const fetchLocations = async () => {
-    setLoading(true);
-    try {
-      const locationsArray = await getShelters(filters);
+const fetchLocations = async () => {
+  setLoading(true);
+  try {
+    const locationsArray = await getShelters(filters);
 
-      if (!Array.isArray(locationsArray)) {
-        console.error("Unexpected API response:", locationsArray);
-        setLocations([]);
-        return;
-      }
-
-      // Add distance if user location exists
-      const withDistance = userLocation
-        ? locationsArray.map((loc) => ({
-            ...loc,
-            distance:
-              loc.latitude && loc.longitude
-                ? getDistanceKm(
-                    userLocation.latitude,
-                    userLocation.longitude,
-                    loc.latitude,
-                    loc.longitude
-                  )
-                : null,
-          }))
-        : locationsArray;
-
-      // Populate sectors & cities
-      if (!allSectors.length) {
-        const sectorsSet = new Set();
-        withDistance.forEach((loc) =>
-          loc.programs.forEach((p) => p.sector && sectorsSet.add(p.sector))
-        );
-        setAllSectors(Array.from(sectorsSet).sort());
-      }
-      if (!allCities.length) {
-        const citiesSet = new Set(
-          withDistance.map((loc) => loc.city).filter(Boolean)
-        );
-        setAllCities(Array.from(citiesSet).sort());
-      }
-
-      setLocations(withDistance);
-    } catch (err) {
-      console.error("Error fetching shelters:", err);
+    if (!Array.isArray(locationsArray)) {
+      console.error("Unexpected API response:", locationsArray);
       setLocations([]);
-    } finally {
-      setLoading(false);
+      return;
     }
-  };
 
+    // Step 1: remove locations without address and programs without name/sector
+    const validLocations = locationsArray
+      .filter(loc => loc.address && loc.programs?.length) // only keep locations with an address
+      .map(loc => ({
+        ...loc,
+        programs: loc.programs.filter(p => p.program_name && p.sector) // remove invalid programs
+      }))
+      .filter(loc => loc.programs.length > 0); // remove locations that lost all programs
+
+    // Step 2: add distance if user location exists
+    const withDistance = userLocation
+      ? validLocations.map(loc => ({
+          ...loc,
+          distance:
+            loc.latitude && loc.longitude
+              ? getDistanceKm(
+                  userLocation.latitude,
+                  userLocation.longitude,
+                  loc.latitude,
+                  loc.longitude
+                )
+              : null,
+        }))
+      : validLocations;
+
+    // Step 3: populate sectors & cities for filters
+    if (!allSectors.length) {
+      const sectorsSet = new Set();
+      withDistance.forEach(loc => loc.programs.forEach(p => sectorsSet.add(p.sector)));
+      setAllSectors(Array.from(sectorsSet).sort());
+    }
+    if (!allCities.length) {
+      const citiesSet = new Set(withDistance.map(loc => loc.city).filter(Boolean));
+      setAllCities(Array.from(citiesSet).sort());
+    }
+
+    setLocations(withDistance);
+  } catch (err) {
+    console.error("Error fetching shelters:", err);
+    setLocations([]);
+  } finally {
+    setLoading(false);
+  }
+};
   useEffect(() => {
     fetchLocations();
   }, [userLocation]);
 
   // Compute filtered locations first
-const visibleLocations = locations.filter(
-  (loc) =>
-    showFullCapacity ||
-    loc.programs.some(
-      (p) =>
-        (p.capacity_actual_bed - (p.occupied_beds || 0)) > 0 ||
-        (p.capacity_actual_room - (p.occupied_rooms || 0)) > 0
-    )
-);
+  
+// Filtered locations for rendering
+const visibleLocations = locations.filter(loc => {
+  // city filter
+  if (filters.city && loc.city !== filters.city) return false;
 
+  // sector / program filters
+  const filteredPrograms = loc.programs.filter(p => {
+    if (filters.sector && p.sector !== filters.sector) return false;
+    const fullCapacity =
+      (p.capacity_actual_bed && p.occupied_beds >= p.capacity_actual_bed) ||
+      (p.capacity_actual_room && p.occupied_rooms >= p.capacity_actual_room);
+    if (!showFullCapacity && fullCapacity) return false;
+    return true;
+  });
+
+  // only show locations with remaining programs
+  return filteredPrograms.length > 0;
+})
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
     setFilters((prev) => ({ ...prev, [name]: value }));
@@ -211,7 +224,7 @@ const visibleLocations = locations.filter(
       ) : locations.length === 0 ? (
         <p>No shelters found.</p>
       ) : (
-        <ul className="shelter-list">
+             <ul className="shelter-list">
           {locations
             .filter((loc) =>
               showFullCapacity ||

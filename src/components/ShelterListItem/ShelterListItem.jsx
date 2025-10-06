@@ -16,11 +16,11 @@ const getDistanceKm = (lat1, lon1, lat2, lon2) => {
 };
 
 const ShelterListItem = ({ loc, userLocation, getGoogleMapsLink }) => {
-  const fullCapacity = loc.programs.every(
-    p =>
-      (p.capacity_actual_bed && (p.occupied_beds || 0) >= p.capacity_actual_bed) &&
-      (p.capacity_actual_room && (p.occupied_rooms || 0) >= p.capacity_actual_room)
-  );
+const fullCapacity = loc.programs.every(
+  p =>
+    ((p.capacity_actual_bed ?? 0) <= (p.occupied_beds ?? 0)) &&
+    ((p.capacity_actual_room ?? 0) <= (p.occupied_rooms ?? 0))
+);
 
   const distance =
     userLocation && loc.latitude && loc.longitude
@@ -48,7 +48,7 @@ const ShelterListItem = ({ loc, userLocation, getGoogleMapsLink }) => {
           <strong>Distance:</strong> {distance.toFixed(1)} km
         </p>
       )}
-
+        <h4 className="programs-title"> Programs </h4>
       <ul className="program-list">
         {loc.programs.map(p => (
           <ProgramListItem key={p.id} program={p} />

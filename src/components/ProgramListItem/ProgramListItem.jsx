@@ -10,7 +10,7 @@ const ProgramListItem = ({ program }) => {
   return (
     <li className={`program-item ${programFull ? "full-capacity" : ""}`}>
       <p className="program-title">
-        <strong>Program:</strong> {program.program_name || "N/A"} |{" "}
+        <strong>{program.program_name || "N/A"} {" "}</strong>| 
         <strong>Sector:</strong> {program.sector || "N/A"}
       </p>
       {hasBeds && (
