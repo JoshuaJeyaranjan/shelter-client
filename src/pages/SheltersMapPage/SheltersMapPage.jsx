@@ -14,7 +14,7 @@ const SheltersMapPage = () => {
       setLoading(true);
       setError(null);
       try {
-        const data = await getShelters();
+        const data = await getLocations();
 
         if (!Array.isArray(data)) {
           console.warn("Unexpected API response:", data);
