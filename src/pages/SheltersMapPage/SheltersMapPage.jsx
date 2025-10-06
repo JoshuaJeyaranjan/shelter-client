@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { getShelters } from "../../api/shelters";
+import { getLocations } from "../../api/shelters";
 import "./SheltersMapPage.scss";
 import SheltersMap from "../../components/SheltersMap/SheltersMap";
 import Nav from "../../components/Nav/Nav";
