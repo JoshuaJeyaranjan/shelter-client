@@ -1,0 +1,64 @@
+.shelter-disclaimer-container {
+  
+
+  .disclaimer-card {
+    background-color: #fff8db;
+    border-left: 4px solid #f5c400;
+    color: #794c00;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    position: relative;
+
+    .close-btn {
+      position: absolute;
+      top: 0.5rem;
+      right: 0.5rem;
+      background: none;
+      border: none;
+      font-weight: bold;
+      font-size: 1rem;
+      color: #794c00;
+      cursor: pointer;
+
+      &:hover {
+        color: #5a3500;
+      }
+    }
+
+    .disclaimer-title {
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+    }
+
+    .disclaimer-text {
+      font-size: 0.875rem;
+      margin-bottom: 0.5rem;
+
+      a.disclaimer-link {
+        text-decoration: underline;
+        font-weight: 600;
+        color: #794c00;
+
+        &:hover {
+          color: #5a3500;
+        }
+      }
+    }
+  }
+
+  .show-btn {
+    background-color: #fff8db;
+    border-left: 4px solid #f5c400;
+    color: #794c00;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+
+    &:hover {
+      background-color: #fff3b8;
+    }
+  }
+}

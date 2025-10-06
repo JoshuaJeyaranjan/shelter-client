@@ -12,12 +12,15 @@ export const getShelters = async (filters = {}) => {
 
     const res = await axios.get(`${API_BASE}/shelters`, { params });
 
-    return {
-      shelters: Array.isArray(res.data) ? res.data : res.data.shelters || [],
-      metadata: res.data.metadata || {},
-    };
+    // Ensure API response has a locations array
+    if (!res.data || !Array.isArray(res.data.locations)) {
+      console.error("Unexpected API response:", res.data);
+      return [];
+    }
+
+    return res.data.locations; // return array directly
   } catch (err) {
     console.error("Error fetching shelters:", err);
-    return { shelters: [], metadata: {} };
+    return [];
   }
 };;
