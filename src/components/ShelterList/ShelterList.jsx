@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { getShelters } from "../../api/shelters";
-import { getSheltersMetadata } from "../../api/metadata";
+import { getLocations } from "../../api/shelters";
+import { getLocationsMetadata } from "../../api/metadata";
 import ShelterListItem from "../ShelterListItem/ShelterListItem";
 import "./ShelterList.scss";
 
@@ -60,7 +60,7 @@ const ShelterList = () => {
   useEffect(() => {
     const fetchMetadata = async () => {
       try {
-        const meta = await getSheltersMetadata();
+        const meta = await getLocationsMetadata();
         if (meta?.lastRefreshed) {
           const torontoTime = new Date(meta.lastRefreshed).toLocaleString(
             "en-CA",
@@ -79,7 +79,7 @@ const ShelterList = () => {
 const fetchLocations = async () => {
   setLoading(true);
   try {
-    const locationsArray = await getShelters(filters);
+    const locationsArray = await getLocations(filters);
 
     if (!Array.isArray(locationsArray)) {
       console.error("Unexpected API response:", locationsArray);
