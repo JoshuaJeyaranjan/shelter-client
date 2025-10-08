@@ -42,13 +42,17 @@ const fullCapacity = loc.programs.every(
           </a>
         </p>
       )}
+      
+      <a href="tel:4163384766" className="disclaimer-link">
+              Call Toronto Central Intake
+            </a>{" "}
 
       {distance && (
         <p className="shelter-distance">
           <strong>Distance:</strong> {distance.toFixed(1)} km
         </p>
       )}
-        <h4 className="programs-title"> Programs </h4>
+        
       <ul className="program-list">
         {loc.programs.map(p => (
           <ProgramListItem key={p.id} program={p} />

@@ -2,8 +2,16 @@ import React, { useState, useMemo, useEffect } from "react";
 import { MapContainer, TileLayer, Marker, Popup, CircleMarker, useMap } from "react-leaflet";
 import L from "leaflet";
 import "./SheltersMap.scss";
+import { filterSheltersWithOccupancy } from "../../utils/filterSheltersWithOccupancy";
 
-// Marker icon helper
+const getGoogleMapsLink = (shelter) =>
+  shelter.address && shelter.city
+    ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+        `${shelter.address}, ${shelter.city}, ${shelter.province || ""}`
+      )}`
+    : "#";
+
+// Marker icon helper (same as before)
 const createMarkerIcon = (color) => L.divIcon({
   className: "",
   html: `
@@ -16,27 +24,6 @@ const createMarkerIcon = (color) => L.divIcon({
   popupAnchor: [0, -40],
 });
 
-// Google Maps link helper
-const getGoogleMapsLink = (shelter) =>
-  shelter.address && shelter.city
-    ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-        `${shelter.address}, ${shelter.city}, ${shelter.province || ""}`
-      )}`
-    : "#";
-
-// Haversine distance
-const getDistanceKm = (lat1, lon1, lat2, lon2) => {
-  const R = 6371;
-  const dLat = ((lat2 - lat1) * Math.PI) / 180;
-  const dLon = ((lon2 - lon1) * Math.PI) / 180;
-  const a =
-    Math.sin(dLat / 2) ** 2 +
-    Math.cos((lat1 * Math.PI) / 180) *
-      Math.cos((lat2 * Math.PI) / 180) *
-      Math.sin(dLon / 2) ** 2;
-  return 2 * R * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-};
-
 // Recenter component
 const RecenterOnUser = ({ userLocation }) => {
   const map = useMap();
@@ -44,6 +31,24 @@ const RecenterOnUser = ({ userLocation }) => {
     if (userLocation) map.flyTo([userLocation.latitude, userLocation.longitude], 13, { duration: 1.5 });
   }, [userLocation]);
   return null;
+};
+
+// Marker color logic
+const getMarkerColor = (location) => {
+  const programs = location.programs || [];
+  const allFull = programs.every(p =>
+    (p.capacity_actual_bed && p.occupied_beds >= p.capacity_actual_bed) ||
+    (p.capacity_actual_room && p.occupied_rooms >= p.capacity_actual_room)
+  );
+  if (allFull) return "#ff4d4f"; // red
+
+  const sector = programs.find(p => p.sector)?.sector?.toLowerCase() || "";
+  if (sector.includes("families")) return "#2ecc71";
+  if (sector.includes("men") && !sector.includes("women")) return "#3498db";
+  if (sector.includes("women")) return "#e91e63";
+  if (sector.includes("mixed adult")) return "#f39c12";
+  if (sector.includes("youth")) return "#9b59b6";
+  return "#95a5a6"; // default gray
 };
 
 const SheltersMap = ({ shelters }) => {
@@ -70,53 +75,15 @@ const SheltersMap = ({ shelters }) => {
     setFilters((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Marker color based on programs
-const getMarkerColor = (location) => {
-  const programs = location.programs || [];
-
-  // Check if all programs are full
-  const allFull = programs.every(p =>
-    (p.capacity_actual_bed && p.occupied_beds >= p.capacity_actual_bed) ||
-    (p.capacity_actual_room && p.occupied_rooms >= p.capacity_actual_room)
-  );
-  if (allFull) return "#ff4d4f"; // red
-
-  // Pick first non-null sector
-  const sector = programs.find(p => p.sector)?.sector?.toLowerCase() || "";
-
-  if (sector.includes("families")) return "#2ecc71";
-  if (sector.includes("men") && !sector.includes("women")) return "#3498db";
-  if (sector.includes("women")) return "#e91e63";
-  if (sector.includes("mixed adult")) return "#f39c12";
-  if (sector.includes("youth")) return "#9b59b6";
-  return "#95a5a6"; // default gray
-};
-
-  // Filter locations and programs
-const filteredShelters = useMemo(() => {
-  return shelters
-    .map(location => {
-      if (!location.latitude || !location.longitude) return null; // skip invalid coords
-
-      const filteredPrograms = location.programs.filter(p => {
-        const fullCapacity = (p.capacity_actual_bed && p.occupied_beds >= p.capacity_actual_bed) ||
-                             (p.capacity_actual_room && p.occupied_rooms >= p.capacity_actual_room);
-        if (!showFullCapacity && fullCapacity) return false;
-        if (filters.sector && p.sector !== filters.sector) return false;
-        return true;
-      });
-
-      if (!filteredPrograms.length) return null;
-      if (filters.city && location.city !== filters.city) return null;
-
-      let distance = null;
-      if (userLocation) distance = getDistanceKm(userLocation.latitude, userLocation.longitude, location.latitude, location.longitude);
-
-      return { ...location, programs: filteredPrograms, distance };
-    })
-    .filter(Boolean)
-    .sort((a, b) => (a.distance || Infinity) - (b.distance || Infinity));
-}, [shelters, filters, showFullCapacity, userLocation]);
+  // ✅ Use filterSheltersWithOccupancy instead of manual filtering
+  const filteredShelters = useMemo(() => {
+    return filterSheltersWithOccupancy({
+      locations: shelters,
+      showFullCapacity,
+      filters,
+      userLocation,
+    });
+  }, [shelters, filters, showFullCapacity, userLocation]);
 
   const mapCenter = userLocation ? [userLocation.latitude, userLocation.longitude] : [43.6532, -79.3832];
 
@@ -156,20 +123,19 @@ const filteredShelters = useMemo(() => {
 
         {filteredShelters.map(s => (
           <Marker key={s.location_name + s.address} position={[s.latitude, s.longitude]} icon={createMarkerIcon(getMarkerColor(s))}>
-<Popup>
-  <strong>{s.location_name}</strong><br/>
-  {s.address && <a href={getGoogleMapsLink(s)}>{s.address}, {s.city}</a>}<br/>
-  {s.distance !== null && (
-  <span>Distance: {s.distance.toFixed(1)} km<br/></span>
-)}
-  {s.programs.map(p => (
-    <div key={p.id}>
-      {p.program_name && <span>Program: {p.program_name}<br/></span>}
-      {p.capacity_actual_bed && <span>Beds: {p.occupied_beds || 0} / {p.capacity_actual_bed}<br/></span>}
-      {p.capacity_actual_room && <span>Rooms: {p.occupied_rooms || 0} / {p.capacity_actual_room}<br/></span>}
-    </div>
-  ))}
-</Popup>
+            <Popup>
+              <strong>{s.location_name}</strong><br/>
+              {s.address && <a href={getGoogleMapsLink(s)}>{s.address}, {s.city}</a>}<br/>
+              {s.distance !== null && <span>Distance: {s.distance.toFixed(1)} km<br/></span>}
+              {s.programs.map(p => (
+                <div key={p.id}>
+                  {p.program_name && <span>Program: {p.program_name}<br/></span>}
+                  {p.capacity_actual_bed && <span>Beds: {p.occupied_beds || 0} / {p.capacity_actual_bed}<br/></span>}
+                  {p.capacity_actual_room && <span>Rooms: {p.occupied_rooms || 0} / {p.capacity_actual_room}<br/></span>}
+                  {p.freshness && <span>Data: {p.freshness}<br/></span>}
+                </div>
+              ))}
+            </Popup>
           </Marker>
         ))}
       </MapContainer>
@@ -178,3 +144,4 @@ const filteredShelters = useMemo(() => {
 };
 
 export default SheltersMap;
+

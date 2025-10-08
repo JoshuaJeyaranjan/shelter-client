@@ -1,4 +1,4 @@
-import React from "react";
+
 import './ProgramListItem.scss'
 const ProgramListItem = ({ program }) => {
   const hasBeds = program.capacity_actual_bed > 0;
@@ -6,11 +6,12 @@ const ProgramListItem = ({ program }) => {
   const programFull =
     (hasBeds && (program.occupied_beds || 0) >= program.capacity_actual_bed) ||
     (hasRooms && (program.occupied_rooms || 0) >= program.capacity_actual_room);
-
+const date = new Date(program.occupancy_date);
+date.setHours(date.getHours() + 24); // crude +1 hour fix
   return (
     <li className={`program-item ${programFull ? "full-capacity" : ""}`}>
       <p className="program-title">
-        <strong>{program.program_name || "N/A"} {" "}</strong>| 
+        <strong>{program.program_name || "N/A"} {" "}</strong> <br></br>
         <strong>Sector:</strong> {program.sector || "N/A"}
       </p>
       {hasBeds && (
@@ -26,16 +27,26 @@ const ProgramListItem = ({ program }) => {
               <p className="program-rooms">
           <strong>Type:</strong> {program.overnight_service_type}
         </p>
+                            <p className="program-date">
+  <strong>Data From:</strong>{" "}
+  {new Date(date).toLocaleDateString("en-CA", {
+    timeZone: 'America/Toronto',
+    weekday: "short",  // optional: Mon, Tue
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  })}
+</p>
 
         <p className={`freshness-tag ${program.freshness}`}>
-  {program.freshness === "recent" && (
+  {program.freshness === "today" && (
       <span className="fresh-badge">🔥 Updated Today</span>
     )}
-    {program.freshness === "fresh" && (
-      <span className="fresh-badge">✅ Fresh</span>
+    {program.freshness === "recent" && (
+      <span className="fresh-badge">✅ Recent Data</span>
     )}
-    {program.freshness === "stale" && (
-      <span className="stale-badge">⚠️ May be stale</span>
+    {program.freshness === "old" && (
+      <span className="stale-badge">⚠️ Old Data</span>
     )}
 </p>
     </li>
