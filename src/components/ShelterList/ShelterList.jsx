@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, {  useState, useEffect } from "react";
+import { useMemo } from "react";
 import { getLocations } from "../../api/shelters";
 import { getLocationsMetadata } from "../../api/metadata";
 import ShelterListItem from "../ShelterListItem/ShelterListItem";
 import "./ShelterList.scss";
-
+import { filterSheltersWithOccupancy } from "../../utils/filterSheltersWithOccupancy";
 // Haversine formula
 const getDistanceKm = (lat1, lon1, lat2, lon2) => {
   const R = 6371;
@@ -102,52 +103,9 @@ const ShelterList = () => {
         }))
         .filter((loc) => loc.programs.length > 0);
 
-const now = new Date();
-const RECENT_HOURS = 24; // newly updated
-const FRESH_HOURS = 72;  // still fresh
-const MAX_HIDE_HOURS = 24 * 30; // hide if older than 30 days
-
-const freshnessFiltered = validLocations
-  .map(loc => {
-    let recentPrograms = [];
-    let freshPrograms = [];
-    let stalePrograms = [];
-
-    loc.programs.forEach(p => {
-      if (!p.occupancy_date) return;
-
-      const occupancyTime = new Date(p.occupancy_date);
-      if (isNaN(occupancyTime)) return;
-
-      const hoursOld = (now - occupancyTime) / (1000 * 60 * 60);
-
-      if (hoursOld <= RECENT_HOURS) {
-        p.freshness = "recent";  // 🔥 updated within 24h
-        recentPrograms.push(p);
-      } else if (hoursOld <= FRESH_HOURS) {
-        p.freshness = "fresh";   // ✅ updated within 72h
-        freshPrograms.push(p);
-      } else if (hoursOld <= MAX_HIDE_HOURS) {
-        p.freshness = "stale";   // ⚠️ updated more than 72h ago
-        stalePrograms.push(p);
-      }
-      // else ignore programs >30 days old
-    });
-
-    // Keep only locations that have at least one program in any category
-    const allPrograms = [...recentPrograms, ...freshPrograms, ...stalePrograms];
-    if (allPrograms.length === 0) return null;
-
-    // Optional: flag if all programs are stale
-    const staleData = recentPrograms.length + freshPrograms.length === 0;
-
-    return { ...loc, programs: allPrograms, staleData };
-  })
-  .filter(Boolean);
-
       // STEP 2: Add distance
       const withDistance = userLocation
-        ? freshnessFiltered.map((loc) => ({
+        ? validLocations.map((loc) => ({
             ...loc,
             distance:
               loc.latitude && loc.longitude
@@ -159,7 +117,7 @@ const freshnessFiltered = validLocations
                   )
                 : null,
           }))
-        : freshnessFiltered;
+        : validLocations;
 
       // STEP 3: Extract unique filter options
       if (!allSectors.length) {
@@ -187,24 +145,17 @@ const freshnessFiltered = validLocations
     fetchLocations();
   }, [userLocation]);
 
-  // 🎛️ Filter locations for display
-  const visibleLocations = locations.filter((loc) => {
-    if (filters.city && loc.city !== filters.city) return false;
 
-    const filteredPrograms = loc.programs.filter((p) => {
-      if (filters.sector && p.sector !== filters.sector) return false;
 
-      const fullCapacity =
-        (p.capacity_actual_bed && p.occupied_beds >= p.capacity_actual_bed) ||
-        (p.capacity_actual_room && p.occupied_rooms >= p.capacity_actual_room);
-
-      if (!showFullCapacity && fullCapacity) return false;
-      return true;
-    });
-
-    return filteredPrograms.length > 0;
+// In your ShelterList component
+const visibleLocations = useMemo(() => {
+  return filterSheltersWithOccupancy({
+    locations,
+    showFullCapacity,
+    filters,
+    userLocation,
   });
-
+}, [locations, filters, showFullCapacity, userLocation]);
   // Handle filter changes
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
@@ -273,8 +224,8 @@ const freshnessFiltered = validLocations
       )}
 
       {/* Info summary */}
-      <div className="shelter-list-info">
-        Showing {visibleLocations.length} of {locations.length} active locations
+           <div className="shelters-map-count">
+        Showing {visibleLocations.reduce((acc, loc) => acc + loc.programs.length, 0)} programs across {visibleLocations.length} locations
       </div>
 
       {/* Shelter List */}
