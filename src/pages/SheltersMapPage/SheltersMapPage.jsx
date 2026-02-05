@@ -54,4 +54,4 @@ const SheltersMapPage = () => {
   );
 };
 
-export default SheltersMapPage;;
+export default SheltersMapPage;

@@ -11,14 +11,19 @@
 
 /* Body defaults */
 body {
-  font-family: 'Helvetica', 'Arial', sans-serif;
+  font-family: "Helvetica", "Arial", sans-serif;
   line-height: 1.6;
   background-color: #fff;
   color: #333;
 }
 
 /* Headings */
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-weight: 600;
   line-height: 1.2;
   margin-bottom: 0.5rem;
@@ -45,12 +50,16 @@ img {
 }
 
 /* Lists */
-ul, ol {
+ul,
+ol {
   list-style: none;
 }
 
 /* Forms */
-input, button, select, textarea {
+input,
+button,
+select,
+textarea {
   font-family: inherit;
   font-size: inherit;
 }

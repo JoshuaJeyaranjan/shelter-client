@@ -1,6 +1,6 @@
 import React from "react";
 import ProgramListItem from "../ProgramListItem/ProgramListItem";
-import './ShelterListItem.scss'
+import "./ShelterListItem.scss";
 
 const getDistanceKm = (lat1, lon1, lat2, lon2) => {
   const R = 6371;
@@ -16,15 +16,20 @@ const getDistanceKm = (lat1, lon1, lat2, lon2) => {
 };
 
 const ShelterListItem = ({ loc, userLocation, getGoogleMapsLink }) => {
-const fullCapacity = loc.programs.every(
-  p =>
-    ((p.capacity_actual_bed ?? 0) <= (p.occupied_beds ?? 0)) &&
-    ((p.capacity_actual_room ?? 0) <= (p.occupied_rooms ?? 0))
-);
+  const fullCapacity = loc.programs.every(
+    (p) =>
+      (p.capacity_actual_bed ?? 0) <= (p.occupied_beds ?? 0) &&
+      (p.capacity_actual_room ?? 0) <= (p.occupied_rooms ?? 0),
+  );
 
   const distance =
     userLocation && loc.latitude && loc.longitude
-      ? getDistanceKm(userLocation.latitude, userLocation.longitude, loc.latitude, loc.longitude)
+      ? getDistanceKm(
+          userLocation.latitude,
+          userLocation.longitude,
+          loc.latitude,
+          loc.longitude,
+        )
       : null;
 
   return (
@@ -33,32 +38,31 @@ const fullCapacity = loc.programs.every(
         <h3 className="shelter-name">{loc.location_name}</h3>
         {fullCapacity && <span className="full-badge">FULL</span>}
       </div>
-
       {loc.address && loc.city && (
         <p className="shelter-address">
           <strong>Address:</strong>{" "}
-          <a href={getGoogleMapsLink(loc)} target="_blank" rel="noopener noreferrer">
+          <a
+            href={getGoogleMapsLink(loc)}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             {loc.address}, {loc.city}, {loc.province}
           </a>
         </p>
       )}
-      
       <a href="tel:4163384766" className="disclaimer-link">
-              Call Toronto Central Intake
-            </a>{" "}
-
+        Call Toronto Central Intake
+      </a>{" "}
       {distance && (
         <p className="shelter-distance">
           <strong>Distance:</strong> {distance.toFixed(1)} km
         </p>
       )}
-        
       <ul className="program-list">
-        {loc.programs.map(p => (
+        {loc.programs.map((p) => (
           <ProgramListItem key={p.id} program={p} />
         ))}
       </ul>
-
       {loc.address && loc.city && (
         <div className="map-container">
           <iframe
@@ -68,7 +72,7 @@ const fullCapacity = loc.programs.every(
             loading="lazy"
             allowFullScreen
             src={`https://maps.google.com/maps?q=${encodeURIComponent(
-              `${loc.address}, ${loc.city}, ${loc.province || ""}`
+              `${loc.address}, ${loc.city}, ${loc.province || ""}`,
             )}&z=15&output=embed`}
           ></iframe>
         </div>

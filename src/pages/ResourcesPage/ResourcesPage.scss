@@ -1,6 +1,6 @@
 .resources-page {
   padding: 2rem;
-  
+
   margin: 0 auto;
   background-color: #333;
   h1 {
@@ -55,7 +55,9 @@
       overflow: hidden;
       display: flex;
       flex-direction: column;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
 
       &:hover {
         transform: translateY(-5px);

@@ -9,7 +9,7 @@ export const filterSheltersWithOccupancy = ({
 }) => {
   const now = new Date();
   const RECENT_HOURS = 24; // updated within last 24 hours
-  const FRESH_HOURS = 72;  // updated within last 3 days
+  const FRESH_HOURS = 72; // updated within last 3 days
   const MAX_HIDE_HOURS = 24 * 30; // hide data older than 30 days
 
   return locations
@@ -45,8 +45,10 @@ export const filterSheltersWithOccupancy = ({
 
           // Exclude full capacity if toggle off
           const fullCapacity =
-            (p.capacity_actual_bed && p.occupied_beds >= p.capacity_actual_bed) ||
-            (p.capacity_actual_room && p.occupied_rooms >= p.capacity_actual_room);
+            (p.capacity_actual_bed &&
+              p.occupied_beds >= p.capacity_actual_bed) ||
+            (p.capacity_actual_room &&
+              p.occupied_rooms >= p.capacity_actual_room);
           if (!showFullCapacity && fullCapacity) return null;
 
           // Sector filter
@@ -68,12 +70,16 @@ export const filterSheltersWithOccupancy = ({
           userLocation.latitude,
           userLocation.longitude,
           location.latitude,
-          location.longitude
+          location.longitude,
         );
       }
 
-      const todayCount = filteredPrograms.filter(p => p.freshness === "today").length;
-console.log(`${location.location_name}: ${todayCount} programs updated today`);
+      const todayCount = filteredPrograms.filter(
+        (p) => p.freshness === "today",
+      ).length;
+      console.log(
+        `${location.location_name}: ${todayCount} programs updated today`,
+      );
 
       return { ...location, programs: filteredPrograms, distance };
     })
