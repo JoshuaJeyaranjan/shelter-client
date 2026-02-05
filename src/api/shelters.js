@@ -9,7 +9,8 @@ export const getLocations = async (filters = {}) => {
     if (filters.sector) params.sector = filters.sector;
     if (filters.city) params.city = filters.city;
     if (filters.minVacancyBeds) params.minVacancyBeds = filters.minVacancyBeds;
-    if (filters.minVacancyRooms) params.minVacancyRooms = filters.minVacancyRooms;
+    if (filters.minVacancyRooms)
+      params.minVacancyRooms = filters.minVacancyRooms;
 
     const res = await axios.get(`${API_BASE}/`, { params });
 
@@ -20,7 +21,9 @@ export const getLocations = async (filters = {}) => {
     }
 
     // Filter out any locations without an address just in case
-    return res.data.locations.filter(loc => loc.address && loc.programs?.length > 0);
+    return res.data.locations.filter(
+      (loc) => loc.address && loc.programs?.length > 0,
+    );
   } catch (err) {
     console.error("Error fetching locations:", err);
     return [];
@@ -30,7 +33,7 @@ export const getLocations = async (filters = {}) => {
 // Fetch a single location by ID
 export const getLocationById = async (id) => {
   try {
-    const res = await axios.get(`${API_BASE}/${id}/location`);
+    const res = await axios.get(`${API_BASE}/${id}/`);
     return res.data;
   } catch (err) {
     console.error(`Error fetching location ${id}:`, err);
@@ -57,9 +60,9 @@ export const getLocationsForMap = async () => {
       console.error("Unexpected API response for map:", res.data);
       return [];
     }
-    return res.data.filter(loc => loc.address); // again, filter out missing addresses
+    return res.data.filter((loc) => loc.address); // again, filter out missing addresses
   } catch (err) {
     console.error("Error fetching locations for map:", err);
     return [];
   }
-}
+};

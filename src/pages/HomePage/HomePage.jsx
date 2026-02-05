@@ -6,27 +6,23 @@ import ShelterDisclaimer from "../../components/ShelterDisclaimer/ShelterDisclai
 const HomePage = () => {
   return (
     <>
-    <ShelterDisclaimer/>
-    <Nav/>
-    
-    <div className="home-container">
-        
-      <header className="hero">
-        <h1>Find Shelter Toronto</h1>
-        
+      <ShelterDisclaimer />
+      <Nav />
 
-        {/* Find Shelters Button */}
-        <Link to="/shelter-map" className="btn find-shelters-btn">
-          Find Shelters
-        </Link>
-      </header>
+      <div className="home-container">
+        <header className="hero">
+          <h1>Find Shelter Toronto</h1>
 
+          {/* Find Shelters Button */}
+          <Link to="/shelter-map" className="btn find-shelters-btn">
+            Find Shelters
+          </Link>
+        </header>
 
-      <div className="shelter-list-section"> 
-        <ShelterList />   
+        <div className="shelter-list-section">
+          <ShelterList />
+        </div>
       </div>
-    </div>
-
     </>
   );
 };

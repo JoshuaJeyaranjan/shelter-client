@@ -28,9 +28,15 @@
 .freshness-tag {
   font-size: 0.8rem;
   opacity: 0.8;
-  &.fresh { color: #2ecc71; }
-  &.stale { color: #f1c40f; }
-  &.expired { color: #e74c3c; }
+  &.fresh {
+    color: #2ecc71;
+  }
+  &.stale {
+    color: #f1c40f;
+  }
+  &.expired {
+    color: #e74c3c;
+  }
 }
 
 .program-item .fresh-badge {

@@ -1,4 +1,4 @@
-import React, {  useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useMemo } from "react";
 import { getLocations } from "../../api/shelters";
 import { getLocationsMetadata } from "../../api/metadata";
@@ -38,7 +38,7 @@ const ShelterList = () => {
   const getGoogleMapsLink = (location) => {
     if (!location.address || !location.city) return "#";
     const query = encodeURIComponent(
-      `${location.address}, ${location.city}, ${location.province || ""}`
+      `${location.address}, ${location.city}, ${location.province || ""}`,
     );
     return `https://www.google.com/maps/search/?api=1&query=${query}`;
   };
@@ -53,7 +53,7 @@ const ShelterList = () => {
           longitude: pos.coords.longitude,
         });
       },
-      (err) => console.warn("Geolocation not available or denied:", err)
+      (err) => console.warn("Geolocation not available or denied:", err),
     );
   }, []);
 
@@ -63,16 +63,19 @@ const ShelterList = () => {
       try {
         const meta = await getLocationsMetadata();
         if (meta?.lastRefreshed) {
-          const torontoTime = new Date(meta.lastRefreshed).toLocaleString("en-CA", {
-            timeZone: "America/Toronto",
-            weekday: "short",
-            year: "numeric",
-            month: "short",
-            day: "numeric",
-            hour: "2-digit",
-            minute: "2-digit",
-            hour12: true,
-          });
+          const torontoTime = new Date(meta.lastRefreshed).toLocaleString(
+            "en-CA",
+            {
+              timeZone: "America/Toronto",
+              weekday: "short",
+              year: "numeric",
+              month: "short",
+              day: "numeric",
+              hour: "2-digit",
+              minute: "2-digit",
+              hour12: true,
+            },
+          );
           setMetadata({ lastRefreshed: torontoTime });
         }
       } catch (err) {
@@ -113,7 +116,7 @@ const ShelterList = () => {
                     userLocation.latitude,
                     userLocation.longitude,
                     loc.latitude,
-                    loc.longitude
+                    loc.longitude,
                   )
                 : null,
           }))
@@ -122,12 +125,16 @@ const ShelterList = () => {
       // STEP 3: Extract unique filter options
       if (!allSectors.length) {
         const sectorsSet = new Set();
-        withDistance.forEach((loc) => loc.programs.forEach((p) => sectorsSet.add(p.sector)));
+        withDistance.forEach((loc) =>
+          loc.programs.forEach((p) => sectorsSet.add(p.sector)),
+        );
         setAllSectors(Array.from(sectorsSet).sort());
       }
 
       if (!allCities.length) {
-        const citiesSet = new Set(withDistance.map((loc) => loc.city).filter(Boolean));
+        const citiesSet = new Set(
+          withDistance.map((loc) => loc.city).filter(Boolean),
+        );
         setAllCities(Array.from(citiesSet).sort());
       }
 
@@ -145,17 +152,15 @@ const ShelterList = () => {
     fetchLocations();
   }, [userLocation]);
 
-
-
-// In your ShelterList component
-const visibleLocations = useMemo(() => {
-  return filterSheltersWithOccupancy({
-    locations,
-    showFullCapacity,
-    filters,
-    userLocation,
-  });
-}, [locations, filters, showFullCapacity, userLocation]);
+  // In your ShelterList component
+  const visibleLocations = useMemo(() => {
+    return filterSheltersWithOccupancy({
+      locations,
+      showFullCapacity,
+      filters,
+      userLocation,
+    });
+  }, [locations, filters, showFullCapacity, userLocation]);
   // Handle filter changes
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
@@ -171,7 +176,11 @@ const visibleLocations = useMemo(() => {
 
       {/* Filters */}
       <div className="filters">
-        <select name="sector" value={filters.sector} onChange={handleFilterChange}>
+        <select
+          name="sector"
+          value={filters.sector}
+          onChange={handleFilterChange}
+        >
           <option value="">All Sectors</option>
           {allSectors.map((s) => (
             <option key={s} value={s}>
@@ -220,12 +229,16 @@ const visibleLocations = useMemo(() => {
 
       {/* Metadata */}
       {metadata?.lastRefreshed && (
-        <div className="last-refreshed">Last Refreshed: {metadata.lastRefreshed}</div>
+        <div className="last-refreshed">
+          Last Refreshed: {metadata.lastRefreshed}
+        </div>
       )}
 
       {/* Info summary */}
-           <div className="shelters-map-count">
-        Showing {visibleLocations.reduce((acc, loc) => acc + loc.programs.length, 0)} programs across {visibleLocations.length} locations
+      <div className="shelters-map-count">
+        Showing{" "}
+        {visibleLocations.reduce((acc, loc) => acc + loc.programs.length, 0)}{" "}
+        programs across {visibleLocations.length} locations
       </div>
 
       {/* Shelter List */}
