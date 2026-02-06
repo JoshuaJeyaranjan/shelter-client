@@ -36,7 +36,7 @@ const ShelterListItem = ({ loc, userLocation, getGoogleMapsLink }) => {
     <li className={`shelter-item ${fullCapacity ? "full-capacity" : ""}`}>
  <div className="shelter-header">
   <h3 className="shelter-name">{loc.location_name}</h3>
-  <p className="organization">Organization: {loc.organization_name}</p>
+  <p className="organization"> {loc.organization_name}</p>
   {loc.shelter_type && (
     <span className={`shelter-type-badge ${loc.shelter_type.toLowerCase()}`}>
       {loc.shelter_type} Shelter
