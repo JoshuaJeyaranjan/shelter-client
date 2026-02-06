@@ -1,51 +1,41 @@
-import React, { useState, useEffect } from "react";
-import { useMemo } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { getLocations } from "../../api/shelters";
-import { getLocationsMetadata } from "../../api/metadata";
 import ShelterListItem from "../ShelterListItem/ShelterListItem";
 import "./ShelterList.scss";
 import { filterSheltersWithOccupancy } from "../../utils/filterSheltersWithOccupancy";
-// Haversine formula
-const getDistanceKm = (lat1, lon1, lat2, lon2) => {
-  const R = 6371;
-  const dLat = ((lat2 - lat1) * Math.PI) / 180;
-  const dLon = ((lon2 - lon1) * Math.PI) / 180;
-  const a =
-    Math.sin(dLat / 2) ** 2 +
-    Math.cos((lat1 * Math.PI) / 180) *
-      Math.cos((lat2 * Math.PI) / 180) *
-      Math.sin(dLon / 2) ** 2;
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  return R * c;
-};
+
+
 
 const ShelterList = () => {
   const [locations, setLocations] = useState([]);
   const [loading, setLoading] = useState(true);
+
   const [filters, setFilters] = useState({
     sector: "",
     city: "",
     minVacancyBeds: "",
     minVacancyRooms: "",
   });
+
   const [allSectors, setAllSectors] = useState([]);
   const [allCities, setAllCities] = useState([]);
+
   const [showFullCapacity, setShowFullCapacity] = useState(false);
-  const [metadata, setMetadata] = useState({ lastRefreshed: null });
   const [userLocation, setUserLocation] = useState(null);
 
-  // 🗺️ Google Maps link
-  const getGoogleMapsLink = (location) => {
-    if (!location.address || !location.city) return "#";
+  // --- Google Maps link helper ---
+  const getGoogleMapsLink = (loc) => {
+    if (!loc.address || !loc.city) return "#";
     const query = encodeURIComponent(
-      `${location.address}, ${location.city}, ${location.province || ""}`,
+      `${loc.address}, ${loc.city}, ${loc.province || ""}`
     );
     return `https://www.google.com/maps/search/?api=1&query=${query}`;
   };
 
-  // 📍 Get user geolocation
+  // --- User geolocation (one-time) ---
   useEffect(() => {
     if (!navigator.geolocation) return;
+
     navigator.geolocation.getCurrentPosition(
       (pos) => {
         setUserLocation({
@@ -53,92 +43,65 @@ const ShelterList = () => {
           longitude: pos.coords.longitude,
         });
       },
-      (err) => console.warn("Geolocation not available or denied:", err),
+      (err) => console.warn("Geolocation denied/unavailable:", err)
     );
   }, []);
 
-  // 🧾 Fetch metadata
-  useEffect(() => {
-    const fetchMetadata = async () => {
-      try {
-        const meta = await getLocationsMetadata();
-        if (meta?.lastRefreshed) {
-          const torontoTime = new Date(meta.lastRefreshed).toLocaleString(
-            "en-CA",
-            {
-              timeZone: "America/Toronto",
-              weekday: "short",
-              year: "numeric",
-              month: "short",
-              day: "numeric",
-              hour: "2-digit",
-              minute: "2-digit",
-              hour12: true,
-            },
-          );
-          setMetadata({ lastRefreshed: torontoTime });
-        }
-      } catch (err) {
-        console.error("Error fetching metadata:", err);
-      }
-    };
-    fetchMetadata();
-  }, []);
-
-  // 🏠 Fetch shelter locations
+  // --- Fetch shelters from API ---
   const fetchLocations = async () => {
     setLoading(true);
+
     try {
       const locationsArray = await getLocations(filters);
 
       if (!Array.isArray(locationsArray)) {
-        console.error("Unexpected API response:", locationsArray);
         setLocations([]);
         return;
       }
 
-      // STEP 1: Filter invalid data
-      const validLocations = locationsArray
-        .filter((loc) => loc.address && loc.programs?.length)
-        .map((loc) => ({
-          ...loc,
-          programs: loc.programs.filter((p) => p.program_name && p.sector),
-        }))
-        .filter((loc) => loc.programs.length > 0);
+      const normalized = locationsArray
+        .map((loc) => {
+          const latitude = Number(loc.latitude);
+          const longitude = Number(loc.longitude);
 
-      // STEP 2: Add distance
-      const withDistance = userLocation
-        ? validLocations.map((loc) => ({
+          if (!Number.isFinite(latitude) || !Number.isFinite(longitude)) {
+            console.warn(
+              "Dropping location due to invalid coordinates:",
+              loc.location_name,
+              loc.latitude,
+              loc.longitude
+            );
+            return null;
+          }
+
+          const programs =
+            loc.programs?.filter(
+              (p) => p.program_name && p.sector
+            ) || [];
+
+          if (!loc.address || programs.length === 0) {
+            return null;
+          }
+
+          return {
             ...loc,
-            distance:
-              loc.latitude && loc.longitude
-                ? getDistanceKm(
-                    userLocation.latitude,
-                    userLocation.longitude,
-                    loc.latitude,
-                    loc.longitude,
-                  )
-                : null,
-          }))
-        : validLocations;
+            latitude,
+            longitude,
+            programs,
+          };
+        })
+        .filter(Boolean);
 
-      // STEP 3: Extract unique filter options
-      if (!allSectors.length) {
-        const sectorsSet = new Set();
-        withDistance.forEach((loc) =>
-          loc.programs.forEach((p) => sectorsSet.add(p.sector)),
-        );
-        setAllSectors(Array.from(sectorsSet).sort());
-      }
+      setLocations(normalized);
 
-      if (!allCities.length) {
-        const citiesSet = new Set(
-          withDistance.map((loc) => loc.city).filter(Boolean),
-        );
-        setAllCities(Array.from(citiesSet).sort());
-      }
-
-      setLocations(withDistance);
+      // Optional: populate filter dropdowns
+      setAllSectors(
+        [...new Set(normalized.flatMap((l) => l.programs.map((p) => p.sector)))]
+          .sort()
+      );
+      setAllCities(
+        [...new Set(normalized.map((l) => l.city).filter(Boolean))].sort()
+      );
     } catch (err) {
       console.error("Error fetching shelters:", err);
       setLocations([]);
@@ -147,12 +110,12 @@ const ShelterList = () => {
     }
   };
 
-  // Re-fetch on user location change or filter apply
+  // Fetch when filters change
   useEffect(() => {
     fetchLocations();
-  }, [userLocation]);
+  }, [filters]);
 
-  // In your ShelterList component
+  // --- Apply occupancy + distance + filters ---
   const visibleLocations = useMemo(() => {
     return filterSheltersWithOccupancy({
       locations,
@@ -161,40 +124,30 @@ const ShelterList = () => {
       userLocation,
     });
   }, [locations, filters, showFullCapacity, userLocation]);
-  // Handle filter changes
+
+  // --- Filter handlers ---
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
     setFilters((prev) => ({ ...prev, [name]: value }));
   };
 
-  const applyFilters = () => fetchLocations();
-
-  // 🧩 RENDER
+  // --- Render ---
   return (
     <div className="shelter-list-container">
       <h1>Toronto Shelters</h1>
 
-      {/* Filters */}
       <div className="filters">
-        <select
-          name="sector"
-          value={filters.sector}
-          onChange={handleFilterChange}
-        >
+        <select name="sector" value={filters.sector} onChange={handleFilterChange}>
           <option value="">All Sectors</option>
           {allSectors.map((s) => (
-            <option key={s} value={s}>
-              {s}
-            </option>
+            <option key={s} value={s}>{s}</option>
           ))}
         </select>
 
         <select name="city" value={filters.city} onChange={handleFilterChange}>
           <option value="">All Cities</option>
           {allCities.map((c) => (
-            <option key={c} value={c}>
-              {c}
-            </option>
+            <option key={c} value={c}>{c}</option>
           ))}
         </select>
 
@@ -205,6 +158,7 @@ const ShelterList = () => {
           value={filters.minVacancyBeds}
           onChange={handleFilterChange}
         />
+
         <input
           type="number"
           placeholder="Min Rooms"
@@ -212,14 +166,12 @@ const ShelterList = () => {
           value={filters.minVacancyRooms}
           onChange={handleFilterChange}
         />
-        <button onClick={applyFilters}>Search</button>
       </div>
 
-      {/* Toggle full capacity */}
       <div style={{ margin: "1rem 0" }}>
         <button
           className="full-capacity-button"
-          onClick={() => setShowFullCapacity(!showFullCapacity)}
+          onClick={() => setShowFullCapacity((v) => !v)}
         >
           {showFullCapacity
             ? "Hide Full Capacity Locations"
@@ -227,21 +179,15 @@ const ShelterList = () => {
         </button>
       </div>
 
-      {/* Metadata */}
-      {metadata?.lastRefreshed && (
-        <div className="last-refreshed">
-          Last Refreshed: {metadata.lastRefreshed}
-        </div>
-      )}
-
-      {/* Info summary */}
       <div className="shelters-map-count">
         Showing{" "}
-        {visibleLocations.reduce((acc, loc) => acc + loc.programs.length, 0)}{" "}
+        {visibleLocations.reduce(
+          (acc, loc) => acc + loc.programs.length,
+          0
+        )}{" "}
         programs across {visibleLocations.length} locations
       </div>
 
-      {/* Shelter List */}
       {loading ? (
         <p>Loading shelters...</p>
       ) : visibleLocations.length === 0 ? (
@@ -250,7 +196,7 @@ const ShelterList = () => {
         <ul className="shelter-list">
           {visibleLocations.map((loc) => (
             <ShelterListItem
-              key={`${loc.location_name}-${loc.address}`}
+              key={`${loc.id}`}
               loc={loc}
               userLocation={userLocation}
               getGoogleMapsLink={getGoogleMapsLink}

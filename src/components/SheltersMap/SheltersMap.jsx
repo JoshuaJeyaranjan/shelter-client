@@ -118,6 +118,8 @@ const SheltersMap = ({ shelters }) => {
     ? [userLocation.latitude, userLocation.longitude]
     : [43.6532, -79.3832];
 
+    console.log("All shelters data:", shelters);
+
   return (
     <div className="shelters-map-container">
       <div className="map-filters">
