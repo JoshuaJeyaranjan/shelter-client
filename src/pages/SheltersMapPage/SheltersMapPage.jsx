@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { getLocations } from "../../api/shelters";
+import { getLocationsForMap } from "../../api/shelters";
 import "./SheltersMapPage.scss";
 import SheltersMap from "../../components/SheltersMap/SheltersMap";
 import Nav from "../../components/Nav/Nav";
@@ -14,7 +14,7 @@ const SheltersMapPage = () => {
       setLoading(true);
       setError(null);
       try {
-        const data = await getLocations();
+        const data = await getLocationsForMap();
 
         if (!Array.isArray(data)) {
           console.warn("Unexpected API response:", data);
