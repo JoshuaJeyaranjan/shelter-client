@@ -13,10 +13,8 @@ const HomePage = () => {
         <header className="hero">
           <h1>Find Shelter Toronto</h1>
 
-          {/* Find Shelters Button */}
-          <Link to="/shelter-map" className="btn find-shelters-btn">
-            Find Shelters
-          </Link>
+        
+        
         </header>
 
         <div className="shelter-list-section">

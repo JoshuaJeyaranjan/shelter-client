@@ -3,7 +3,7 @@ import { getLocationsForMap } from "../../api/shelters";
 import "./SheltersMapPage.scss";
 import SheltersMap from "../../components/SheltersMap/SheltersMap";
 import Nav from "../../components/Nav/Nav";
-
+import ShelterDisclaimer from "../../components/ShelterDisclaimer/ShelterDisclaimer";
 const SheltersMapPage = () => {
   const [shelters, setShelters] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -36,6 +36,7 @@ const SheltersMapPage = () => {
 
   return (
     <>
+    <ShelterDisclaimer />
       <Nav />
       <div className="shelters-map-page">
         <h1>Toronto Shelters Map</h1>

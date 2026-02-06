@@ -79,3 +79,168 @@
     }
   }
 }
+
+.shelter-type-badge {
+  display: inline-block;
+  padding: 0.2rem 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: #fff;
+  margin-left: 0.5rem;
+  margin-bottom: .5rem;
+
+  &.emergency {
+    background-color: #e74c3c; // red
+  }
+
+  &.transitional {
+    background-color: #3498db; // blue
+  }
+
+  // optional hover effect
+  &:hover {
+    opacity: 0.85;
+  }
+}
+
+.disclaimer-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #ffb74d; // orange for visibility
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.85rem;
+  padding: 0.35rem 0.6rem;
+  border-radius: 0.35rem;
+  margin: 0.5rem 0;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  align-self: center;
+  width: 50%; 
+
+  &:hover {
+    background-color: #ffa726; // slightly darker on hover
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    transform: translateY(-1px);
+  }
+
+  &::before {
+    content: "📞"; // phone emoji
+    margin-right: 0.4rem;
+  }
+
+  // make it full width on smaller screens if needed
+  @media (max-width: 480px) {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+.shelter-distance {
+  display: inline-block;
+  // background-color: #2ecc71; // green for positive info
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  margin-left: 0.5rem;
+  transition: all 0.2s ease;
+  align-self: center;
+  width: 25%; 
+    &::before {
+    content: "🧭"; // phone emoji
+    margin-right: 0.4rem;
+  }
+
+  &:hover {
+    opacity: 0.85;
+  }
+}
+
+/* Target the link directly */
+.shelter-address-link {
+  color: #f1c40f !important;  // golden accent
+  font-weight: 500;
+  text-decoration: underline;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: #f39c12;
+    text-decoration: none;
+  }
+}
+.shelter-address {
+  display: inline-block;
+  // background-color: #a22ecc; // green for positive info
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  margin-left: 0.5rem;
+  transition: all 0.2s ease;
+  width: 75%;
+  align-self: center;
+
+  &:hover {
+    opacity: 0.85;
+  }
+  
+
+  strong {
+    margin-right: 0.25rem;
+  }
+
+  a {
+    text-decoration: none;
+    color: #f1c40f; // golden accent to draw attention
+    font-weight: 500;
+    text-decoration: underline;
+    transition: color 0.2s ease;
+
+    &:hover {
+      color: #f39c12;
+      text-decoration: none;
+    }
+  }
+
+  // Optional: small map pin icon before the address
+  &::before {
+    content: "📍";
+    margin-right: 0.25rem;
+  }
+}
+
+.program-list {
+  margin-top: 1rem;
+  padding-left: 0; // reset default ul padding
+  list-style: none;
+
+  .program-list-title {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: #f1c40f; // golden accent to match address link / highlights
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .program-item {
+    padding: 0.5rem 0;
+    font-size: 0.85rem;
+    color: #444;
+
+    &.full-capacity {
+      opacity: 0.6;
+    }
+
+    p {
+      margin: 0.2rem 0;
+    }
+  }
+}
