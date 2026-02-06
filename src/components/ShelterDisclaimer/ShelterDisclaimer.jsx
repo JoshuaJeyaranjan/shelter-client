@@ -31,7 +31,7 @@ const ShelterDisclaimer = () => {
           <p className="disclaimer-text">
             For <strong>accurate and up-to-date information</strong>, please
             contact{" "}
-            <a href="tel:4163384766" className="disclaimer-link">
+            <a href="tel:4163384766" className="top-disclaimer-link">
               Toronto Central Intake
             </a>{" "}
             before attempting to visit a shelter. This site is intended for

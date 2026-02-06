@@ -1,10 +1,11 @@
 // NavBar.jsx
-import React from "react";
+import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import "./Nav.scss";
 
 const Nav = () => {
   const location = useLocation();
+  const [isOpen, setIsOpen] = useState(false);
 
   const links = [
     { name: "Home", path: "/" },
@@ -14,16 +15,28 @@ const Nav = () => {
 
   return (
     <nav className="navbar">
-      <div className="navbar-logo">
-        <Link to="/">🏠 Shelter Toronto</Link>
+      <div className="navbar-top">
+        <div className="navbar-logo">
+          <Link to="/">🏠 Shelter Toronto</Link>
+        </div>
+        <button
+          className="navbar-toggle"
+          onClick={() => setIsOpen((prev) => !prev)}
+          aria-label="Toggle navigation"
+        >
+          ☰
+        </button>
       </div>
-      <ul className="navbar-links">
+
+      <ul className={`navbar-links ${isOpen ? "open" : ""}`}>
         {links.map((link) => (
           <li
             key={link.name}
             className={location.pathname === link.path ? "active" : ""}
           >
-            <Link to={link.path}>{link.name}</Link>
+            <Link to={link.path} onClick={() => setIsOpen(false)}>
+              {link.name}
+            </Link>
           </li>
         ))}
       </ul>

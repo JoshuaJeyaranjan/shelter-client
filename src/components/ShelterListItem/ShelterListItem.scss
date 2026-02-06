@@ -110,7 +110,7 @@
   align-items: center;
   justify-content: center;
   background-color: #ffb74d; // orange for visibility
-  color: #fff;
+  color: rgb(32, 32, 32);
   font-weight: 600;
   font-size: 0.85rem;
   padding: 0.35rem 0.6rem;
@@ -151,7 +151,7 @@
   margin-left: 0.5rem;
   transition: all 0.2s ease;
   align-self: center;
-  width: 25%; 
+  
     &::before {
     content: "🧭"; // phone emoji
     margin-right: 0.4rem;
