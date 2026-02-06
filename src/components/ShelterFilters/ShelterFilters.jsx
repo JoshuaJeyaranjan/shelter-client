@@ -56,7 +56,7 @@ const ShelterFilters = ({
       </select>
 
       {/* Organization */}
-      <select name="organization" value={filters.organization} onChange={handleChange}>
+      <select name="organization" value={filters.organization} onChange={handleChange} className="organization-select">
         <option value="">All Organizations</option>
         {allOrganizations.map((o) => (
           <option key={o} value={o}>{o}</option>

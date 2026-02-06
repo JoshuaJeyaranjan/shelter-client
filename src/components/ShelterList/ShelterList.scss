@@ -10,6 +10,10 @@
   padding: 2rem;
   color: white; // all text white
   font-family: "Segoe UI", Roboto, sans-serif;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 
 
   .shelter-summary {
