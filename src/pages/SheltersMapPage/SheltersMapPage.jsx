@@ -4,6 +4,8 @@ import "./SheltersMapPage.scss";
 import SheltersMap from "../../components/SheltersMap/SheltersMap";
 import Nav from "../../components/Nav/Nav";
 import ShelterDisclaimer from "../../components/ShelterDisclaimer/ShelterDisclaimer";
+import Footer from "../../components/Footer/Footer";
+import Spinner from "../../components/Spinner/Spinner";
 const SheltersMapPage = () => {
   const [shelters, setShelters] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -36,13 +38,15 @@ const SheltersMapPage = () => {
 
   return (
     <>
-    <ShelterDisclaimer />
+      <ShelterDisclaimer />
       <Nav />
       <div className="shelters-map-page">
-        <h1>Toronto Shelters Map</h1>
+        <header className="hero">
+          <h1>Find Shelter Toronto</h1>
+        </header>
 
         {loading ? (
-          <p>Loading shelters...</p>
+          <Spinner size={80} color="#1e90ff" text="Loading shelters..." />
         ) : error ? (
           <p className="error-message">{error}</p>
         ) : shelters.length === 0 ? (
@@ -51,6 +55,7 @@ const SheltersMapPage = () => {
           <SheltersMap shelters={shelters} />
         )}
       </div>
+      <Footer />
     </>
   );
 };

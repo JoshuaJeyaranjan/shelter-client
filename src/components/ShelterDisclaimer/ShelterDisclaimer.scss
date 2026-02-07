@@ -8,20 +8,12 @@
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
     position: relative;
 
-    .close-btn {
-      position: absolute;
-      top: 0.5rem;
-      right: 0.5rem;
-      background: none;
-      border: none;
-      font-weight: bold;
-      font-size: 1rem;
-      color: #794c00;
-      cursor: pointer;
+    /* Make the whole card clickable to open/close (accessible) */
+    cursor: pointer;
 
-      &:hover {
-        color: #5a3500;
-      }
+    &:focus {
+      outline: 3px solid rgba(245, 196, 0, 0.35);
+      outline-offset: 3px;
     }
 
     .disclaimer-title {
@@ -50,10 +42,10 @@
     border-left: 4px solid #f5c400;
     color: #794c00;
     padding: 0.5rem 1rem;
-    border-radius: 0.5rem;
+    border: none;
     font-weight: 600;
     cursor: pointer;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    
     width: 100%;
 
     &:hover {
@@ -72,12 +64,11 @@
   font-size: 0.85rem;
   padding: 0.35rem 0.6rem;
   border-radius: 0.35rem;
-  margin: 0.5rem 0;
+  margin: 0.5rem;
   text-decoration: none;
   transition: all 0.2s ease;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   align-self: center;
-  
 
   &:hover {
     background-color: #ffa726; // slightly darker on hover

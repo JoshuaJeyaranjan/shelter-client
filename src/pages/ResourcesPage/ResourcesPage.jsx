@@ -3,6 +3,7 @@ import Resource from "../../components/Resource/Resource";
 import "./ResourcesPage.scss";
 import Nav from "../../components/Nav/Nav";
 import { resourcesData } from "../../data/resourcesData";
+import Footer from "../../components/Footer/Footer";
 
 const ResourcesPage = () => {
   const [selectedCategory, setSelectedCategory] = useState("");
@@ -47,6 +48,7 @@ const ResourcesPage = () => {
           ))}
         </div>
       </div>
+      <Footer />
     </>
   );
 };

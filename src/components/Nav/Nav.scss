@@ -4,13 +4,17 @@
   padding: 0.75rem 1.5rem;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   display: flex;
-  flex-direction: column; // stacked by default for mobile-ready
+  position: relative;
+  align-items: center;
+  justify-content: space-between;
 
+  /* Top row holds the logo (left) and the toggle (right) on mobile */
   .navbar-top {
     display: flex;
-    justify-content: space-between; // logo left, hamburger right
     align-items: center;
     width: 100%;
+    gap: 1rem;
+    justify-content: space-between;
   }
 
   .navbar-logo {
@@ -23,8 +27,9 @@
     }
   }
 
+  /* Hamburger visible on mobile, hidden on desktop */
   .navbar-toggle {
-    display: none;
+    display: block;
     font-size: 1.5rem;
     background: none;
     border: none;
@@ -32,19 +37,39 @@
     cursor: pointer;
   }
 
+  /* Mobile: links are a collapsing block below the top row */
   .navbar-links {
-    display: flex;
-    gap: 1.5rem;
     list-style: none;
     margin: 0;
     padding: 0;
+    width: 100%;
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height 0.28s ease;
+    display: flex;
+    flex-direction: column;
+    background-color: #0074cc;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 100%;
+    z-index: 20;
+
+    &.open {
+      max-height: 400px;
+    }
 
     li {
+      padding: 0.65rem 1rem;
+
       a {
         color: white;
         text-decoration: none;
         font-weight: 500;
-        transition: color 0.2s;
+        display: block;
+        width: 100%;
+        text-align: center;
+        transition: color 0.18s;
 
         &:hover {
           color: #ffdd57;
@@ -57,26 +82,41 @@
     }
   }
 
-  /* Mobile responsiveness */
-  @media (max-width: 768px) {
-    .navbar-toggle {
-      display: block; // show hamburger
+  /* Desktop layout: logo left, links inline on the right; hide hamburger */
+  @media (min-width: 769px) {
+    /* on desktop the nav is already positioned; ensure the top row doesn't take full width */
+    .navbar {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
     }
 
-    .navbar-links {
-      flex-direction: column;
-      width: 100%;
-      max-height: 0;
-      overflow: hidden;
-      transition: max-height 0.3s ease;
+    .navbar-top {
+      width: auto;
+    }
 
-      &.open {
-        max-height: 500px; // enough for links
-      }
+    .navbar-toggle {
+      display: none;
+    }
+
+    /* place links inline at the right */
+    .navbar-links {
+      justify-self: flex-end;
+      position: static;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 1.5rem;
+      max-height: none;
+      background: transparent;
+      margin-left: auto;
 
       li {
-        width: 100%;
-        text-align: center;
+        padding: 0;
+
+        a {
+          text-align: left;
+        }
       }
     }
   }
