@@ -21,7 +21,7 @@ export const filterSheltersWithOccupancy = ({
         console.warn(
           `Skipping shelter ${location.location_name} due to invalid coordinates:`,
           location.latitude,
-          location.longitude
+          location.longitude,
         );
         return null;
       }
@@ -71,7 +71,7 @@ export const filterSheltersWithOccupancy = ({
               userLocation.latitude,
               userLocation.longitude,
               location.latitude,
-              location.longitude
+              location.longitude,
             )
           : null;
 
@@ -81,6 +81,6 @@ export const filterSheltersWithOccupancy = ({
     .sort(
       (a, b) =>
         (a.distance != null ? a.distance : Infinity) -
-        (b.distance != null ? b.distance : Infinity)
+        (b.distance != null ? b.distance : Infinity),
     );
 };

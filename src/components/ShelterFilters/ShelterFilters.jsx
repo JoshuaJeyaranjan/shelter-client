@@ -35,7 +35,9 @@ const ShelterFilters = ({
       <select name="sector" value={filters.sector} onChange={handleChange}>
         <option value="">All Sectors</option>
         {allSectors.map((s) => (
-          <option key={s} value={s}>{s}</option>
+          <option key={s} value={s}>
+            {s}
+          </option>
         ))}
       </select>
 
@@ -43,23 +45,38 @@ const ShelterFilters = ({
       <select name="city" value={filters.city} onChange={handleChange}>
         <option value="">All Cities</option>
         {allCities.map((c) => (
-          <option key={c} value={c}>{c}</option>
+          <option key={c} value={c}>
+            {c}
+          </option>
         ))}
       </select>
 
       {/* Shelter Type */}
-      <select name="shelterType" value={filters.shelterType} onChange={handleChange}>
+      <select
+        name="shelterType"
+        value={filters.shelterType}
+        onChange={handleChange}
+      >
         <option value="">All Shelter Types</option>
         {allShelterTypes.map((t) => (
-          <option key={t} value={t}>{t}</option>
+          <option key={t} value={t}>
+            {t}
+          </option>
         ))}
       </select>
 
       {/* Organization */}
-      <select name="organization" value={filters.organization} onChange={handleChange} className="organization-select">
+      <select
+        name="organization"
+        value={filters.organization}
+        onChange={handleChange}
+        className="organization-select"
+      >
         <option value="">All Organizations</option>
         {allOrganizations.map((o) => (
-          <option key={o} value={o}>{o}</option>
+          <option key={o} value={o}>
+            {o}
+          </option>
         ))}
       </select>
 

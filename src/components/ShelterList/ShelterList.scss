@@ -16,13 +16,8 @@
   align-items: center;
 
 
-  .shelter-summary {
-    margin-bottom: 1rem;
-    font-weight: 500;
-    font-size: 1rem;
-  }
-
   .shelter-list {
+    margin-top: 1rem;
     list-style: none;
     padding: 0;
 
@@ -87,7 +82,6 @@
     }
   }
 }
-
 
 .address-link {
   color: #0074cc;

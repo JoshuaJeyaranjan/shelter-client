@@ -8,6 +8,7 @@ import ShelterList from "./components/ShelterList/ShelterList";
 import HomePage from "./pages/HomePage/HomePage";
 import SheltersMapPage from "./pages/SheltersMapPage/SheltersMapPage";
 import ResourcesPage from "./pages/ResourcesPage/ResourcesPage";
+
 function App() {
   return (
     <Router>

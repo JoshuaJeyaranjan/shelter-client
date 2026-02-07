@@ -4,7 +4,7 @@ import ShelterListItem from "../ShelterListItem/ShelterListItem";
 import ShelterFilters from "../ShelterFilters/ShelterFilters";
 import "./ShelterList.scss";
 import { filterSheltersWithOccupancy } from "../../utils/filterSheltersWithOccupancy";
-
+import Spinner from "../Spinner/Spinner";
 const ShelterList = () => {
   const [locations, setLocations] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -30,7 +30,7 @@ const ShelterList = () => {
   const getGoogleMapsLink = (loc) =>
     loc.address && loc.city
       ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-          `${loc.address}, ${loc.city}, ${loc.province || ""}`
+          `${loc.address}, ${loc.city}, ${loc.province || ""}`,
         )}`
       : "#";
 
@@ -43,7 +43,7 @@ const ShelterList = () => {
           latitude: pos.coords.latitude,
           longitude: pos.coords.longitude,
         }),
-      (err) => console.warn("Geolocation unavailable:", err)
+      (err) => console.warn("Geolocation unavailable:", err),
     );
   }, []);
 
@@ -62,9 +62,11 @@ const ShelterList = () => {
         .map((loc) => {
           const latitude = Number(loc.latitude);
           const longitude = Number(loc.longitude);
-          if (!Number.isFinite(latitude) || !Number.isFinite(longitude)) return null;
+          if (!Number.isFinite(latitude) || !Number.isFinite(longitude))
+            return null;
 
-          const programs = loc.programs?.filter((p) => p.program_name && p.sector) || [];
+          const programs =
+            loc.programs?.filter((p) => p.program_name && p.sector) || [];
           if (!loc.address || programs.length === 0) return null;
 
           return { ...loc, latitude, longitude, programs };
@@ -74,10 +76,22 @@ const ShelterList = () => {
       setLocations(normalized);
 
       // populate dropdowns
-      setAllSectors([...new Set(normalized.flatMap((l) => l.programs.map((p) => p.sector)))].sort());
-      setAllCities([...new Set(normalized.map((l) => l.city).filter(Boolean))].sort());
-      setAllShelterTypes([...new Set(normalized.map((l) => l.shelter_type).filter(Boolean))]);
-      setAllOrganizations([...new Set(normalized.map((l) => l.organization_name).filter(Boolean))]);
+      setAllSectors(
+        [
+          ...new Set(
+            normalized.flatMap((l) => l.programs.map((p) => p.sector)),
+          ),
+        ].sort(),
+      );
+      setAllCities(
+        [...new Set(normalized.map((l) => l.city).filter(Boolean))].sort(),
+      );
+      setAllShelterTypes([
+        ...new Set(normalized.map((l) => l.shelter_type).filter(Boolean)),
+      ]);
+      setAllOrganizations([
+        ...new Set(normalized.map((l) => l.organization_name).filter(Boolean)),
+      ]);
     } catch (err) {
       console.error("Error fetching shelters:", err);
       setLocations([]);
@@ -98,24 +112,18 @@ const ShelterList = () => {
       filters,
       userLocation,
     }).filter((loc) => {
-      if (filters.shelterType && loc.shelter_type !== filters.shelterType) return false;
-      if (filters.organization && loc.organization_name !== filters.organization) return false;
+      if (filters.shelterType && loc.shelter_type !== filters.shelterType)
+        return false;
+      if (
+        filters.organization &&
+        loc.organization_name !== filters.organization
+      )
+        return false;
       return true;
     });
   }, [locations, filters, showFullCapacity, userLocation]);
 
-  // --- Clear filters ---
-  const clearFilters = () => {
-    setFilters({
-      sector: "",
-      city: "",
-      shelterType: "",
-      organization: "",
-      minVacancyBeds: "",
-      minVacancyRooms: "",
-    });
-    setShowFullCapacity(false);
-  };
+
 
   return (
     <div className="shelter-list-container">
@@ -130,14 +138,19 @@ const ShelterList = () => {
         setShowFullCapacity={setShowFullCapacity}
       />
 
-
-
       <div className="shelters-map-count">
-        Showing {visibleLocations.reduce((acc, loc) => acc + loc.programs.length, 0)} programs across {visibleLocations.length} locations
+        <span className="highlight-program-number">
+          {visibleLocations.reduce((acc, s) => acc + s.programs.length, 0)}
+        </span>{" "}
+        programs across{" "}
+        <span className="highlight-location-number">
+          {visibleLocations.length}
+        </span>{" "}
+        locations
       </div>
 
       {loading ? (
-        <p>Loading shelters...</p>
+        <Spinner size={80} color="#1e90ff" text="Loading shelters..." />
       ) : visibleLocations.length === 0 ? (
         <p>No shelters found.</p>
       ) : (

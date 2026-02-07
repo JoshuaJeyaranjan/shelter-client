@@ -34,37 +34,40 @@ const ShelterListItem = ({ loc, userLocation, getGoogleMapsLink }) => {
 
   return (
     <li className={`shelter-item ${fullCapacity ? "full-capacity" : ""}`}>
- <div className="shelter-header">
-  <h3 className="shelter-name">{loc.location_name}</h3>
-  <p className="organization"> {loc.organization_name}</p>
-  {loc.shelter_type && (
-    <span className={`shelter-type-badge ${loc.shelter_type.toLowerCase()}`}>
-      {loc.shelter_type} Shelter
-    </span>
-  )}
-  {fullCapacity && <span className="full-badge">FULL</span>}
-</div>
-{loc.address && loc.city && (
-  <p className="shelter-address">
-    <strong>Address:</strong>{" "}
-    <a
-      className="shelter-address-link"
-      href={getGoogleMapsLink(loc)}
-      target="_blank"
-      rel="noopener noreferrer"
-    >
-      {loc.address}, {loc.city}, {loc.province}
-    </a>
-  </p>
-)}
+      <div className="shelter-header">
+        <h3 className="shelter-name">{loc.location_name}</h3>
+        <p className="organization"> {loc.organization_name}</p>
+        {loc.shelter_type && (
+          <span
+            className={`shelter-type-badge ${loc.shelter_type.toLowerCase()}`}
+          >
+            {loc.shelter_type} Shelter
+          </span>
+        )}
+        {fullCapacity && <span className="full-badge">FULL</span>}
+      </div>
+      {loc.address && loc.city && (
+        <p className="shelter-address">
+          <strong>Address:</strong>{" "}
+          <a
+            className="shelter-address-link"
+            href={getGoogleMapsLink(loc)}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {loc.address}, {loc.city}, {loc.province}
+          </a>
+        </p>
+      )}
+            {distance && (
+        <p className="shelter-distance">
+           {distance.toFixed(1)} km away
+        </p>
+      )}
       <a href="tel:4163384766" className="disclaimer-link">
         Call Toronto Central Intake
       </a>{" "}
-      {distance && (
-        <p className="shelter-distance">
-          <strong>Distance:</strong> {distance.toFixed(1)} km
-        </p>
-      )}
+
       <ul className="program-list">
         <p className="program-list-title">Programs:</p>
         {loc.programs.map((p) => (
