@@ -17,7 +17,7 @@ const Nav = () => {
     <nav className="navbar">
       <div className="navbar-top">
         <div className="navbar-logo">
-          <Link to="/">🏠 Shelter Toronto</Link>
+          <Link to="/">Shelter Toronto ❤️</Link>
         </div>
         <button
           className="navbar-toggle"
