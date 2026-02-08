@@ -6,7 +6,7 @@ const ProgramListItem = ({ program }) => {
     (hasBeds && (program.occupied_beds || 0) >= program.capacity_actual_bed) ||
     (hasRooms && (program.occupied_rooms || 0) >= program.capacity_actual_room);
   const date = new Date(program.occupancy_date);
-  date.setHours(date.getHours() + 24); // crude +1 hour fix
+  date.setHours(date.getHours() + 24); 
   return (
     <li className={`program-item ${programFull ? "full-capacity" : ""}`}>
       <p className="program-title">
@@ -32,7 +32,7 @@ const ProgramListItem = ({ program }) => {
         <strong>Data From:</strong>{" "}
         {new Date(date).toLocaleDateString("en-CA", {
           timeZone: "America/Toronto",
-          weekday: "short", // optional: Mon, Tue
+          weekday: "short", 
           year: "numeric",
           month: "short",
           day: "numeric",

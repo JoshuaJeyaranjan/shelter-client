@@ -8,7 +8,7 @@
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
     position: relative;
 
-    /* Make the whole card clickable to open/close (accessible) */
+    
     cursor: pointer;
 
     &:focus {
@@ -58,7 +58,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background-color: #ffb74d; // orange for visibility
+  background-color: #ffb74d; 
   color: inherit;
   font-weight: 600;
   font-size: 0.85rem;
@@ -71,18 +71,18 @@
   align-self: center;
 
   &:hover {
-    background-color: #ffa726; // slightly darker on hover
+    background-color: #ffa726; 
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
     transform: translateY(-1px);
     cursor: pointer;
   }
 
   &::before {
-    content: "📞"; // phone emoji
+    content: "📞"; 
     margin-right: 0.4rem;
   }
 
-  // make it full width on smaller screens if needed
+  
   @media (max-width: 480px) {
     width: 100%;
     justify-content: center;
