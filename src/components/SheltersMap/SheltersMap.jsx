@@ -87,7 +87,7 @@ const SheltersMap = ({ shelters }) => {
   const [showFullCapacity, setShowFullCapacity] = useState(false);
   const [userLocation, setUserLocation] = useState(null);
 
-  // Geolocation
+  
   useEffect(() => {
     if (!navigator.geolocation) return;
     navigator.geolocation.getCurrentPosition(
@@ -100,7 +100,7 @@ const SheltersMap = ({ shelters }) => {
     );
   }, []);
 
-  // Flatten for filter dropdowns
+  
   const allPrograms = useMemo(
     () => shelters.flatMap((s) => s.programs),
     [shelters],
@@ -130,7 +130,7 @@ const SheltersMap = ({ shelters }) => {
     [shelters],
   );
 
-  // Filter shelters
+  
   const filteredShelters = useMemo(() => {
     return filterSheltersWithOccupancy({
       locations: shelters,
@@ -159,7 +159,7 @@ const SheltersMap = ({ shelters }) => {
 
   return (
     <div className="shelters-map-container">
-      {/* Filters */}
+      
       <ShelterFilters
         filters={filters}
         setFilters={setFilters}
@@ -182,7 +182,7 @@ const SheltersMap = ({ shelters }) => {
         locations
       </div>
 
-      {/* Map */}
+      
       <MapContainer
         center={mapCenter}
         zoom={12}
@@ -253,7 +253,7 @@ const SheltersMap = ({ shelters }) => {
         ))}
       </MapContainer>
 
-      {/* Legend */}
+      
       <div className="map-legend">
         <ul>
           {Object.entries(SECTOR_COLORS).map(

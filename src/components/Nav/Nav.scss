@@ -8,7 +8,7 @@
   align-items: center;
   justify-content: space-between;
 
-  /* Top row holds the logo (left) and the toggle (right) on mobile */
+  
   .navbar-top {
     display: flex;
     align-items: center;
@@ -30,7 +30,7 @@
     }
   }
 
-  /* Hamburger visible on mobile, hidden on desktop */
+  
   .navbar-toggle {
     display: block;
     font-size: 1.5rem;
@@ -40,7 +40,7 @@
     cursor: pointer;
   }
 
-  /* Mobile: links are a collapsing block below the top row */
+  
   .navbar-links {
     list-style: none;
     margin: 0;
@@ -85,9 +85,9 @@
     }
   }
 
-  /* Desktop layout: logo left, links inline on the right; hide hamburger */
+  
   @media (min-width: 769px) {
-    /* on desktop the nav is already positioned; ensure the top row doesn't take full width */
+    
     .navbar {
       display: flex;
       flex-direction: row;
@@ -102,7 +102,7 @@
       display: none;
     }
 
-    /* place links inline at the right */
+    
     .navbar-links {
       justify-self: flex-end;
       position: static;

@@ -8,12 +8,12 @@ import Footer from "../../components/Footer/Footer";
 const ResourcesPage = () => {
   const [selectedCategory, setSelectedCategory] = useState("");
 
-  // Dynamically get all unique categories
+  
   const categories = useMemo(() => {
     return Array.from(new Set(resourcesData.map((r) => r.category))).sort();
   }, []);
 
-  // Filtered resources based on selected category
+  
   const filteredResources = useMemo(() => {
     if (!selectedCategory) return resourcesData;
     return resourcesData.filter((r) => r.category === selectedCategory);

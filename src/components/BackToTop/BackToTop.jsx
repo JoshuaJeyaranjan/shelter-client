@@ -6,7 +6,7 @@ const BackToTop = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      setVisible(window.scrollY > 200); // show after scrolling 200px
+      setVisible(window.scrollY > 200); 
     };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);

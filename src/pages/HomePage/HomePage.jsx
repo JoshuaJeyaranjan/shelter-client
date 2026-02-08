@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom"; // <-- import Link
+import { Link } from "react-router-dom"; 
 import "./HomePage.scss";
 import ShelterList from "../../components/ShelterList/ShelterList";
 import Nav from "../../components/Nav/Nav";

@@ -31,7 +31,7 @@ const ShelterFilters = ({
 
   return (
     <div className="filters">
-      {/* Sector */}
+      
       <select name="sector" value={filters.sector} onChange={handleChange}>
         <option value="">All Sectors</option>
         {allSectors.map((s) => (
@@ -41,7 +41,7 @@ const ShelterFilters = ({
         ))}
       </select>
 
-      {/* City */}
+      
       <select name="city" value={filters.city} onChange={handleChange}>
         <option value="">All Cities</option>
         {allCities.map((c) => (
@@ -51,7 +51,7 @@ const ShelterFilters = ({
         ))}
       </select>
 
-      {/* Shelter Type */}
+      
       <select
         name="shelterType"
         value={filters.shelterType}
@@ -65,7 +65,7 @@ const ShelterFilters = ({
         ))}
       </select>
 
-      {/* Organization */}
+      
       <select
         name="organization"
         value={filters.organization}
@@ -80,8 +80,9 @@ const ShelterFilters = ({
         ))}
       </select>
 
-      {/* Min Beds */}
+      
       <input
+        className="number-input"
         type="number"
         name="minVacancyBeds"
         placeholder="Min Beds"
@@ -90,8 +91,9 @@ const ShelterFilters = ({
         onChange={handleChange}
       />
 
-      {/* Min Rooms */}
+      
       <input
+        className="number-input"
         type="number"
         name="minVacancyRooms"
         placeholder="Min Rooms"
@@ -99,23 +101,21 @@ const ShelterFilters = ({
         value={filters.minVacancyRooms}
         onChange={handleChange}
       />
-
-      {/* Show Full Capacity Toggle */}
-      <button
-        type="button"
-        className="full-capacity-button"
-        onClick={() => setShowFullCapacity((v) => !v)}
-      >
-        {showFullCapacity ? "Hide Full Capacity" : "Show Full Capacity"}
-      </button>
-
-      {/* Clear Filters */}
+      
       <button
         type="button"
         className="clear-filters-button"
         onClick={handleClear}
       >
         Clear Filters
+      </button>
+
+      <button
+        type="button"
+        className="full-capacity-button"
+        onClick={() => setShowFullCapacity((v) => !v)}
+      >
+        {showFullCapacity ? "Hide Full Capacity" : "Show Full Capacity"}
       </button>
     </div>
   );

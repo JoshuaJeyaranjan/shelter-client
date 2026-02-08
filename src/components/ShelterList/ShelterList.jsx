@@ -26,7 +26,7 @@ const ShelterList = () => {
   const [showFullCapacity, setShowFullCapacity] = useState(false);
   const [userLocation, setUserLocation] = useState(null);
 
-  // --- Google Maps link helper ---
+  
   const getGoogleMapsLink = (loc) =>
     loc.address && loc.city
       ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
@@ -34,7 +34,7 @@ const ShelterList = () => {
         )}`
       : "#";
 
-  // --- User geolocation ---
+  
   useEffect(() => {
     if (!navigator.geolocation) return;
     navigator.geolocation.getCurrentPosition(
@@ -47,11 +47,11 @@ const ShelterList = () => {
     );
   }, []);
 
-  // --- Fetch all shelters ---
+  
   const fetchLocations = async () => {
     setLoading(true);
     try {
-      const locationsArray = await getLocations(); // fetch full dataset
+      const locationsArray = await getLocations(); 
 
       if (!Array.isArray(locationsArray)) {
         setLocations([]);
@@ -75,7 +75,7 @@ const ShelterList = () => {
 
       setLocations(normalized);
 
-      // populate dropdowns
+      
       setAllSectors(
         [
           ...new Set(
@@ -104,7 +104,7 @@ const ShelterList = () => {
     fetchLocations();
   }, []);
 
-  // --- Filtered list ---
+  
   const visibleLocations = useMemo(() => {
     return filterSheltersWithOccupancy({
       locations,

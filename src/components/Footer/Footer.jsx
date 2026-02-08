@@ -8,11 +8,11 @@ const Footer = () => {
     <footer className="footer">
       <div className="footer__content">
         <p className="footer__text">
-          © {currentYear} Toronto Shelters. All rights reserved.
+          © {currentYear} Shelter Toronto ❤️. All rights reserved.
         </p>
         <div className="footer__links">
-          <a href="https://opendata.toronto.ca" target="_blank" rel="noopener noreferrer">
-            Open Data
+          <a href="https://open.toronto.ca/dataset/daily-shelter-overnight-service-occupancy-capacity/" target="_blank" rel="noopener noreferrer">
+            City of Toronto Open Data
           </a>
           <a href="/privacy">Privacy Policy</a>
         </div>

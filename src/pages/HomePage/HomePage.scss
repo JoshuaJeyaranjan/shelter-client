@@ -1,7 +1,7 @@
 .home-container {
   text-align: center;
-  padding: 4rem 2rem;
-  background-color: #333; // subtle off-white background
+  padding: 2rem 2rem;
+  background-color: #333; 
 
   .hero {
     h1 {
@@ -64,7 +64,7 @@
     }
   }
 
-  // Optional subtle animation for content fade-in
+  
   .hero,
   .info,
   .cta {
@@ -80,7 +80,7 @@
     }
   }
 
-  // Responsive tweaks
+  
   @media (max-width: 768px) {
     .hero h1 {
       font-size: 2.2rem;

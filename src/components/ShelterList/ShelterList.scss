@@ -8,7 +8,7 @@
   max-width: 900px;
   margin: 0 auto;
   padding: 2rem;
-  color: white; // all text white
+  color: white; 
   font-family: "Segoe UI", Roboto, sans-serif;
   display: flex;
   flex-direction: column;
@@ -50,7 +50,7 @@
       }
 
       &.full-capacity {
-        background-color: #4d0000; // deep red for full capacity
+        background-color: #4d0000; 
         border-color: #d10000;
 
         .full-capacity-indicator {
@@ -67,7 +67,7 @@
   }
 }
 
-// Responsive adjustments
+
 @media (max-width: 600px) {
   .shelter-list-container {
     padding: 1rem;

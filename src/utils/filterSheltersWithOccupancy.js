@@ -13,7 +13,7 @@ export const filterSheltersWithOccupancy = ({
 
   return locations
     .map((location) => {
-      // --- Force numeric lat/lng ---
+      
       const lat = Number(location.latitude);
       const lng = Number(location.longitude);
 
@@ -29,7 +29,7 @@ export const filterSheltersWithOccupancy = ({
       location.latitude = lat;
       location.longitude = lng;
 
-      // --- Filter programs ---
+      
       const filteredPrograms = (location.programs || [])
         .map((p) => {
           if (!p.occupancy_date) return null;

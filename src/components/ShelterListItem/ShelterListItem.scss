@@ -1,6 +1,6 @@
 .shelter-item {
   background: #fff;
-  border-radius: 0.75rem; // 12px
+  border-radius: 0.75rem; 
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   padding: 1rem 1.5rem;
   margin-bottom: 1rem;
@@ -92,14 +92,14 @@
   margin-bottom: 0.5rem;
 
   &.emergency {
-    background-color: #e74c3c; // red
+    background-color: #e74c3c; 
   }
 
   &.transitional {
-    background-color: #3498db; // blue
+    background-color: #3498db; 
   }
 
-  // optional hover effect
+  
   &:hover {
     opacity: 0.85;
   }
@@ -109,7 +109,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background-color: #ffb74d; // orange for visibility
+  background-color: #ffb74d; 
   color: rgb(32, 32, 32);
   font-weight: 600;
   font-size: 0.85rem;
@@ -123,17 +123,17 @@
   width: 50%;
 
   &:hover {
-    background-color: #ffa726; // slightly darker on hover
+    background-color: #ffa726; 
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
     transform: translateY(-1px);
   }
 
   &::before {
-    content: "📞"; // phone emoji
+    content: "📞"; 
     margin-right: 0.4rem;
   }
 
-  // make it full width on smaller screens if needed
+  
   @media (max-width: 480px) {
     width: 100%;
     justify-content: center;
@@ -142,7 +142,7 @@
 
 .shelter-distance {
   display: inline-block;
-  // background-color: #2ecc71; // green for positive info
+  
   color: #fff;
   font-weight: 600;
   font-size: 0.75rem;
@@ -159,9 +159,9 @@
   }
 }
 
-/* Target the link directly */
+
 .shelter-address-link {
-  color: #f1c40f !important; // golden accent
+  color: #f1c40f !important; 
   font-weight: 500;
   text-decoration: underline;
   transition: color 0.2s ease;
@@ -173,7 +173,7 @@
 }
 .shelter-address {
   display: inline-block;
-  // background-color: #a22ecc; // green for positive info
+  
   color: #fff;
   font-weight: 600;
   font-size: 0.75rem;
@@ -194,7 +194,7 @@
 
   a {
     text-decoration: none;
-    color: #f1c40f; // golden accent to draw attention
+    color: #f1c40f; 
     font-weight: 500;
     text-decoration: underline;
     transition: color 0.2s ease;
@@ -205,7 +205,7 @@
     }
   }
 
-  // Optional: small map pin icon before the address
+  
   &::before {
     content: "📍";
     margin-right: 0.25rem;
@@ -214,13 +214,13 @@
 
 .program-list {
   margin-top: 1rem;
-  padding-left: 0; // reset default ul padding
+  padding-left: 0; 
   list-style: none;
 
   .program-list-title {
     font-weight: 600;
     font-size: 0.95rem;
-    color: #f1c40f; // golden accent to match address link / highlights
+    color: #f1c40f; 
     margin-bottom: 0.5rem;
     text-transform: uppercase;
     letter-spacing: 0.5px;

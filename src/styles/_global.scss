@@ -1,6 +1,6 @@
-/* _global.scss */
 
-/* Reset margins, paddings, box-sizing */
+
+
 *,
 *::before,
 *::after {
@@ -9,7 +9,7 @@
   box-sizing: border-box;
 }
 
-/* Body defaults */
+
 body {
   font-family: "Helvetica", "Arial", sans-serif;
   line-height: 1.6;
@@ -17,7 +17,7 @@ body {
   color: #333;
 }
 
-/* Headings */
+
 h1,
 h2,
 h3,
@@ -29,12 +29,12 @@ h6 {
   margin-bottom: 0.5rem;
 }
 
-/* Paragraphs */
+
 p {
   margin-bottom: 1rem;
 }
 
-/* Links */
+
 a {
   text-decoration: none;
   color: inherit;
@@ -43,19 +43,19 @@ a {
   }
 }
 
-/* Images */
+
 img {
   max-width: 100%;
   display: block;
 }
 
-/* Lists */
+
 ul,
 ol {
   list-style: none;
 }
 
-/* Forms */
+
 input,
 button,
 select,
@@ -64,7 +64,7 @@ textarea {
   font-size: inherit;
 }
 
-/* Buttons */
+
 button {
   cursor: pointer;
 }
