@@ -5,6 +5,7 @@ import ShelterFilters from "../ShelterFilters/ShelterFilters";
 import "./ShelterList.scss";
 import { filterSheltersWithOccupancy } from "../../utils/filterSheltersWithOccupancy";
 import Spinner from "../Spinner/Spinner";
+import SheltersMap from "../SheltersMap/SheltersMap";
 const ShelterList = () => {
   const [locations, setLocations] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -148,6 +149,17 @@ const ShelterList = () => {
         </span>{" "}
         locations
       </div>
+
+
+      {loading ? (
+        <Spinner size={80} color="#1e90ff" text="Loading shelters..." />
+      ) : visibleLocations.length === 0 ? (
+        <p>No shelters found.</p>
+      ) : (
+        <SheltersMap shelters={visibleLocations} />
+      )}
+
+
 
       {loading ? (
         <Spinner size={80} color="#1e90ff" text="Loading shelters..." />

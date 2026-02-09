@@ -8,8 +8,7 @@ const Nav = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const links = [
-    { name: "Home", path: "/" },
-    { name: "Map", path: "/shelter-map" },
+    
     { name: "Resources", path: "/resources" },
   ];
 

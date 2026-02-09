@@ -5,6 +5,7 @@ import Nav from "../../components/Nav/Nav";
 import ShelterDisclaimer from "../../components/ShelterDisclaimer/ShelterDisclaimer";
 import Footer from "../../components/Footer/Footer";
 import BackToTop from "../../components/BackToTop/BackToTop";
+
 const HomePage = () => {
   return (
     <>
